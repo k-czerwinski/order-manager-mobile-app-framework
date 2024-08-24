@@ -12,9 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.coroutines.coroutineScope
 import pl.edu.agh.data.remote.api.ApiClient
-import pl.edu.agh.data.remote.api.LoginRequest
 import pl.edu.agh.presentation.ui.theme.OrderManagerTheme
 
 class MainActivity : ComponentActivity() {
