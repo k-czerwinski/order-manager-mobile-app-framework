@@ -1,4 +1,4 @@
-package pl.edu.agh.ui.theme
+package pl.edu.agh.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

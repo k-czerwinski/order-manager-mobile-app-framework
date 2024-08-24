@@ -1,4 +1,4 @@
-package pl.edu.agh.ui.theme
+package pl.edu.agh.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
