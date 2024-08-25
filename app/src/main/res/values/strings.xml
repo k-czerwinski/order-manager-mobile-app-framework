@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Order Manager</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_company_domain">Company domain</string>
+    <string name="login_button">Login</string>
+    <string name="login_invalid_credentials">Invalid credentials</string>
+    <string name="login_empty_field">This field cannot be empty</string>
+    <string name="login_unexpected_error">Unexpected error</string>
+    <string name="login_try_again">Try again</string>
+    <string name="login_contact_administrator">If this problem persists, contact the administrator</string>
 </resources>
