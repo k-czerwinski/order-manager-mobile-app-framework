@@ -4,20 +4,32 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import pl.edu.agh.Greeting
+import pl.edu.agh.presentation.sharedViewModel
+import pl.edu.agh.presentation.ui.client.LoggedInUserLayout
+import pl.edu.agh.presentation.ui.client.MainScreen
+import pl.edu.agh.presentation.viewmodel.CompanyViewModel
 
 fun NavGraphBuilder.clientGraph(navController: NavHostController) {
     navigation(
         startDestination = "client_home", route = "client_route"
     ) {
-        clientHomeScreen()
-    }
-}
+        composable("client_home") {
+            val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            LoggedInUserLayout(navController = navController, companyViewModel) {
+                MainScreen()
+            }
+        }
+        composable("client_orders") {
 
-fun NavGraphBuilder.clientHomeScreen() {
-    composable("client_home") {
-        // TODO: Implement Client Home Screen
-        Greeting(name = "client")
+        }
+        composable("client_new_order") {
 
+        }
+        composable("client_settings") {
+
+        }
+        composable("client_logout") {
+
+        }
     }
 }

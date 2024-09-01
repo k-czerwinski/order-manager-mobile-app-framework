@@ -60,6 +60,10 @@ object EncryptedSharedPreferencesManager {
         return getStringProperty(ACCESS_TOKEN_KEY)
     }
 
+    fun getCompanyId(): Int {
+        return getIntProperty(COMPANY_ID_KEY)
+    }
+
     fun clearUserData() {
         checkInitialized()
         sharedPreferences.edit().clear().apply()
