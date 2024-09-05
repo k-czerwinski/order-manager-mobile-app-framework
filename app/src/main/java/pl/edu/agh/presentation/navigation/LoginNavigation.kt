@@ -42,13 +42,13 @@ fun navigateOnLoginState(navController: NavController, loginState: LoginViewMode
             val userRole = loginState.userRole
             when (userRole) {
                 UserRole.CLIENT -> navController.navigate("client_route") {
-                    popUpTo("auth") {
+                    popUpTo("auth_route") {
                         inclusive = true
                     }
                 }
 
                 UserRole.COURIER -> navController.navigate("courier_route") {
-                    popUpTo("auth") {
+                    popUpTo("auth_route") {
                         inclusive = true
                     }
                 }

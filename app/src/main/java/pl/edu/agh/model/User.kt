@@ -1,7 +1,7 @@
 package pl.edu.agh.model
 
-enum class UserRole {
-    CLIENT,
-    COURIER,
-    ADMIN // not allowed in this app
+enum class UserRole(val urlName: String) {
+    CLIENT("client"),
+    COURIER("courier"),
+    ADMIN("admin") // not allowed in this app
 }

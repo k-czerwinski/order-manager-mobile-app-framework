@@ -82,10 +82,12 @@ fun AppMenu(showMenu: Boolean, onDismissRequest: () -> Unit, menuItems: @Composa
 
 @Composable
 fun BackNavigationIcon(navController: NavController) {
-    IconButton(onClick = { navController.popBackStack() }) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "Previous screen"
-        )
+    if (navController.previousBackStackEntry != null) {
+        IconButton(onClick = { navController.popBackStack() }) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Previous screen"
+            )
+        }
     }
 }

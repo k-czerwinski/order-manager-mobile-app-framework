@@ -64,6 +64,15 @@ object EncryptedSharedPreferencesManager {
         return getIntProperty(COMPANY_ID_KEY)
     }
 
+    fun getUserId(): Int {
+        return getIntProperty(USER_ID_KEY)
+    }
+
+    fun getUserRole(): UserRole {
+        val roleName = getStringProperty(USER_ROLE_KEY)
+        return UserRole.valueOf(roleName)
+    }
+
     fun clearUserData() {
         checkInitialized()
         sharedPreferences.edit().clear().apply()

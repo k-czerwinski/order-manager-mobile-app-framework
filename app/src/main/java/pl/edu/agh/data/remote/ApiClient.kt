@@ -19,7 +19,10 @@ import pl.edu.agh.BuildConfig
 import pl.edu.agh.data.remote.dto.Company
 import pl.edu.agh.data.remote.dto.LoginRequest
 import pl.edu.agh.data.remote.dto.LoginResponse
+import pl.edu.agh.data.remote.dto.OrderListViewItemDTO
+import pl.edu.agh.data.remote.dto.UserDTO
 import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
+import pl.edu.agh.model.UserRole
 
 class HttpResponseException(val httpStatusCode: HttpStatusCode, message: String) :
     RuntimeException(message)
@@ -74,7 +77,25 @@ object ApiClient {
         Log.d("ApiClient", response.toString())
         return when (response.status) {
             HttpStatusCode.OK -> response.body()
-            else -> throw HttpResponseException(response.status, "Unexpected error during login")
+            else -> throw HttpResponseException(response.status, "Unexpected error fetching company")
+        }
+    }
+
+    suspend fun getOrders(companyId: Int, userRole: UserRole, userId: Int) : List<OrderListViewItemDTO> {
+        val response = authenticatedClient.get("${SERVER_URL}/company/${companyId}/${userRole.urlName}/${userId}/orders")
+        Log.d("ApiClient", response.toString())
+        return when (response.status) {
+            HttpStatusCode.OK -> response.body()
+            else -> throw HttpResponseException(response.status, "Unexpected error fetch order list")
+        }
+    }
+
+    suspend fun getCurrentUser(companyId: Int, userRole: UserRole) : UserDTO {
+        val response = authenticatedClient.get("${SERVER_URL}/company/${companyId}/${userRole.urlName}")
+        Log.d("ApiClient", response.toString())
+        return when (response.status) {
+            HttpStatusCode.OK -> response.body()
+            else -> throw HttpResponseException(response.status, "Unexpected error fetching user")
         }
     }
 }

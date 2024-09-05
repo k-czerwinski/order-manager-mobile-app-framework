@@ -1,10 +1,5 @@
 package pl.edu.agh.presentation.ui.client
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DropdownMenuItem
@@ -17,18 +12,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import pl.edu.agh.R
+import pl.edu.agh.model.OrderListViewItem
 import pl.edu.agh.presentation.ui.common.AppMenu
 import pl.edu.agh.presentation.ui.common.BackNavigationIcon
 import pl.edu.agh.presentation.ui.common.AppScreen
 import pl.edu.agh.presentation.ui.common.AppTopBar
+import pl.edu.agh.presentation.ui.common.OrdersScreen
 import pl.edu.agh.presentation.viewmodel.CompanyViewModel
+import pl.edu.agh.presentation.viewmodel.OrdersViewModel
+import pl.edu.agh.presentation.viewmodel.UserViewModel
 
 @Composable
 fun ClientTopBar(
@@ -91,34 +86,19 @@ fun LoggedInUserLayout(
 }
 
 @Composable
-@Preview
-fun MainScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .background(Color.Red)
-        ) {
-            Text("1", modifier = Modifier.align(Alignment.Center))
-        }
-        Box(
-            modifier = Modifier
-                .weight(3f)
-                .fillMaxWidth()
-                .background(Color.Green)
-        ) {
-            Text("3", modifier = Modifier.align(Alignment.Center))
-        }
-        Box(
-            modifier = Modifier
-                .weight(5f)
-                .fillMaxWidth()
-                .background(Color.Blue)
-        ) {
-            Text("5", modifier = Modifier.align(Alignment.Center))
-        }
+fun ClientOrdersScreen(
+    navController: NavController,
+    ordersViewModel: OrdersViewModel,
+    userViewModel: UserViewModel
+) {
+    val ordersState = ordersViewModel.ordersState.collectAsState()
+    val orders = ordersState.value.let {
+        if (it is OrdersViewModel.OrdersState.Success) it.orderDTOS.map(OrderListViewItem::fromOrder) else emptyList()
     }
+    val userState = userViewModel.userState.collectAsState()
+    val userName = userState.value.let {
+        if (it is UserViewModel.UserState.Success) it.userDTO.firstName else "User"
+    }
+
+    OrdersScreen(userName, orders, onNewOrderClick = { navController.navigate("client_new_order") })
 }
