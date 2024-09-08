@@ -1,6 +1,7 @@
 package pl.edu.agh.data.remote.dto
 
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import pl.edu.agh.data.remote.serialization.BigDecimalSerializer
 import java.math.BigDecimal
@@ -15,8 +16,12 @@ data class OrderDTO(
     val sendOn: LocalDateTime? = null,
     val deliveredOn: LocalDateTime? = null,
     val expectedDeliveryOn: LocalDateTime? = null,
-    val courier: UserDTO? = null,
-    val totalPrice: String
+    @SerialName("client")
+    val clientId: Int,
+    @SerialName("courier")
+    val courierId: Int? = null,
+    @Serializable(with = BigDecimalSerializer::class)
+    val totalPrice: BigDecimal
 )
 
 @Serializable
@@ -35,6 +40,6 @@ data class OrderListViewItemDTO(
 
 @Serializable
 data class ProductOrderDTO(
-    val productDTO: ProductDTO,
+    val product: ProductDTO,
     val quantity: Int
 )

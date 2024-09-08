@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -29,8 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pl.edu.agh.R
+import pl.edu.agh.model.Order
 import pl.edu.agh.model.OrderListViewItem
 import pl.edu.agh.model.OrderStatus
+import pl.edu.agh.model.ProductOrder
+import pl.edu.agh.presentation.navigation.ClientNavigation
 
 @Composable
 fun OrderStatusWithDescription(status: OrderStatus) {
@@ -73,10 +77,11 @@ fun OrderStatusWithDescription(status: OrderStatus) {
 }
 
 @Composable
-fun OrderItem(order: OrderListViewItem) {
+fun OrderItem(order: OrderListViewItem, onClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
@@ -103,14 +108,16 @@ fun OrderItem(order: OrderListViewItem) {
 }
 
 @Composable
-fun OrdersList(orders: List<OrderListViewItem>) {
+fun OrdersList(orders: List<OrderListViewItem>, navController: NavController) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(0.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(orders) { order ->
-            OrderItem(order = order)
+            OrderItem(
+                order = order,
+                onClick = { navController.navigate(ClientNavigation.createOrderDetailsRoute(order.id)) })
         }
     }
 }
@@ -136,7 +143,12 @@ fun OrderListGreetings(userName: String) {
 }
 
 @Composable
-fun OrdersScreen(userName: String, orders: List<OrderListViewItem>, onNewOrderClick: () -> Unit) {
+fun OrdersScreen(
+    userName: String,
+    orders: List<OrderListViewItem>,
+    onNewOrderClick: () -> Unit,
+    navController: NavController
+) {
     val sortedOrders = orders.sortedByDescending { it.date }
 
     Box(
@@ -149,7 +161,7 @@ fun OrdersScreen(userName: String, orders: List<OrderListViewItem>, onNewOrderCl
         ) {
             OrderListGreetings(userName)
             Spacer(modifier = Modifier.height(16.dp))
-            OrdersList(orders = sortedOrders)
+            OrdersList(orders = sortedOrders, navController = navController)
         }
 
         Button(
@@ -160,6 +172,128 @@ fun OrdersScreen(userName: String, orders: List<OrderListViewItem>, onNewOrderCl
                 .padding(16.dp)
         ) {
             Text(text = "New Order")
+        }
+    }
+}
+
+@Composable
+fun OrderDetailScreen(order: Order) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            OrderSummary(order = order)
+            Spacer(modifier = Modifier.height(16.dp))
+            ProductOrderList(products = order.products)
+        }
+    }
+}
+
+@Composable
+fun ProductOrderList(products: List<ProductOrder>) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(0.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(products) { product ->
+            ProductItem(productOrder = product)
+        }
+    }
+}
+
+@Composable
+fun OrderSummary(order: Order) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = order.name,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Total Price: ${order.totalPrice}",
+                fontSize = 17.sp,
+                color = Color.Gray
+            )
+            Text(
+                text = "Placed On: ${order.getFormattedPlacedOn()}",
+                fontSize = 17.sp,
+                color = Color.Gray
+            )
+            Text(
+                text = "Delivery: ${order.getFormattedExpectedDeliveryOn()}",
+                fontSize = 17.sp,
+                color = Color.Gray
+            )
+        }
+        OrderStatusWithDescription(status = order.status)
+    }
+}
+
+@Composable
+fun ProductItem(productOrder: ProductOrder) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = productOrder.product.name,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = productOrder.product.description,
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .fillMaxWidth(0.7f),
+                    maxLines = 3
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .wrapContentWidth(Alignment.End),
+                horizontalAlignment = Alignment.End
+            ) {
+                Text(
+                    text = "Quantity: ${productOrder.quantity}",
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
+                Text(
+                    text = "Price per item: ${productOrder.product.price}",
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
+                Text(
+                    text = "Total Price: ${productOrder.totalPrice}",
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
+            }
         }
     }
 }

@@ -10,9 +10,9 @@ import pl.edu.agh.data.remote.ApiClient
 import pl.edu.agh.data.remote.dto.OrderListViewItemDTO
 import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
 
-class OrdersViewModel : ViewModel() {
-    private val _ordersState = MutableStateFlow<OrdersState>(OrdersState.Empty)
-    val ordersState: StateFlow<OrdersState> = _ordersState
+class OrdersListViewModel : ViewModel() {
+    private val _ordersListState = MutableStateFlow<OrdersListState>(OrdersListState.Empty)
+    val ordersListState: StateFlow<OrdersListState> = _ordersListState
 
     init {
         fetchOrders()
@@ -25,17 +25,17 @@ class OrdersViewModel : ViewModel() {
                 val userRole = EncryptedSharedPreferencesManager.getUserRole()
                 val userId = EncryptedSharedPreferencesManager.getUserId()
                 val orders = ApiClient.getOrders(companyId, userRole, userId)
-                _ordersState.value = OrdersState.Success(orders)
+                _ordersListState.value = OrdersListState.Success(orders)
             } catch (e: Exception) {
                 Log.d("OrdersViewModel", "Error fetching orders: ${e.message}")
-                _ordersState.value = OrdersState.Error("Error fetching orders: ${e.message}")
+                _ordersListState.value = OrdersListState.Error("Error fetching orders: ${e.message}")
             }
         }
     }
 
-    sealed class OrdersState {
-        data object Empty : OrdersState()
-        data class Success(val orderDTOS: List<OrderListViewItemDTO>) : OrdersState()
-        data class Error(val message: String) : OrdersState()
+    sealed class OrdersListState {
+        data object Empty : OrdersListState()
+        data class Success(val orderDTOS: List<OrderListViewItemDTO>) : OrdersListState()
+        data class Error(val message: String) : OrdersListState()
     }
 }

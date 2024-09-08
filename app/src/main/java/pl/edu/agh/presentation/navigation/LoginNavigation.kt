@@ -14,23 +14,31 @@ import pl.edu.agh.presentation.sharedViewModel
 import pl.edu.agh.presentation.viewmodel.LoginViewModel
 import pl.edu.agh.presentation.viewmodel.LoginViewModel.LoginState.*
 
+enum class LoginNavigation(route: String) {
+    LOGIN_START("login_start"),
+    INVALID_CREDENTIALS("invalid_credentials"),
+    UNEXPECTED_ERROR("unexpected_error");
+
+    val route: String = AppNavigation.Auth.route + "/" + route
+}
+
 fun NavGraphBuilder.authGraph(navController: NavHostController) {
     navigation(
-        startDestination = "login_start", route = "auth_route"
+        startDestination = LoginNavigation.LOGIN_START.route, route = AppNavigation.Auth.route
     ) {
-        composable("login_start") {
+        composable(LoginNavigation.LOGIN_START.route) {
             val loginViewModel = it.sharedViewModel<LoginViewModel>(navController)
             LoginScreen(navController, loginViewModel)
         }
-        composable("invalid_credentials") {
+        composable(LoginNavigation.INVALID_CREDENTIALS.route) {
             LoginInvalidCredentialsScreen {
-                navController.navigate("login_start")
+                navController.navigate(LoginNavigation.LOGIN_START.route)
             }
         }
-        composable("unexpected_error") {
+        composable(LoginNavigation.UNEXPECTED_ERROR.route) {
             EncryptedSharedPreferencesManager.clearUserData()
             LoginUnknownErrorScreen {
-                navController.navigate("login_start")
+                navController.navigate(LoginNavigation.LOGIN_START.route)
             }
         }
     }
@@ -41,28 +49,28 @@ fun navigateOnLoginState(navController: NavController, loginState: LoginViewMode
         is Success -> {
             val userRole = loginState.userRole
             when (userRole) {
-                UserRole.CLIENT -> navController.navigate("client_route") {
-                    popUpTo("auth_route") {
+                UserRole.CLIENT -> navController.navigate(AppNavigation.Client.route) {
+                    popUpTo(AppNavigation.Auth.route) {
                         inclusive = true
                     }
                 }
 
-                UserRole.COURIER -> navController.navigate("courier_route") {
-                    popUpTo("auth_route") {
+                UserRole.COURIER -> navController.navigate(AppNavigation.Courier.route) {
+                    popUpTo(AppNavigation.Auth.route) {
                         inclusive = true
                     }
                 }
-                else -> navController.navigate("unexpected_error")
+                else -> navController.navigate(LoginNavigation.UNEXPECTED_ERROR.route)
             }
         }
 
         is UnexpectedError -> {
             EncryptedSharedPreferencesManager.clearUserData()
-            navController.navigate("unexpected_error")
+            navController.navigate(LoginNavigation.UNEXPECTED_ERROR.route)
         }
         is InvalidCredentials -> {
             EncryptedSharedPreferencesManager.clearUserData()
-            navController.navigate("invalid_credentials")
+            navController.navigate(LoginNavigation.INVALID_CREDENTIALS.route)
         }
         else -> {} /** this cases was handled in [LoginScreen] **/
     }

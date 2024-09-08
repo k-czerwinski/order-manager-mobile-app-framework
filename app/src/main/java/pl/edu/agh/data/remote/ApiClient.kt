@@ -19,6 +19,7 @@ import pl.edu.agh.BuildConfig
 import pl.edu.agh.data.remote.dto.Company
 import pl.edu.agh.data.remote.dto.LoginRequest
 import pl.edu.agh.data.remote.dto.LoginResponse
+import pl.edu.agh.data.remote.dto.OrderDTO
 import pl.edu.agh.data.remote.dto.OrderListViewItemDTO
 import pl.edu.agh.data.remote.dto.UserDTO
 import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
@@ -96,6 +97,16 @@ object ApiClient {
         return when (response.status) {
             HttpStatusCode.OK -> response.body()
             else -> throw HttpResponseException(response.status, "Unexpected error fetching user")
+        }
+    }
+
+    suspend fun getOrderDetails(companyId: Int, userRole: UserRole, userId: Int, orderId: Int) : OrderDTO {
+        val response = authenticatedClient.get("${SERVER_URL}/company/${companyId}" +
+                "/${userRole.urlName}/${userId}/order/${orderId}")
+        Log.d("ApiClient", response.toString())
+        return when (response.status) {
+            HttpStatusCode.OK -> response.body()
+            else -> throw HttpResponseException(response.status, "Unexpected error fetching order details")
         }
     }
 }

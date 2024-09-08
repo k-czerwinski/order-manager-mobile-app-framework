@@ -6,35 +6,65 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import pl.edu.agh.presentation.sharedViewModel
+import pl.edu.agh.presentation.ui.client.ClientOrderDetailsScreen
 import pl.edu.agh.presentation.ui.client.LoggedInUserLayout
 import pl.edu.agh.presentation.ui.client.ClientOrdersScreen
+import pl.edu.agh.presentation.ui.common.UnexpectedErrorScreen
 import pl.edu.agh.presentation.viewmodel.CompanyViewModel
-import pl.edu.agh.presentation.viewmodel.OrdersViewModel
+import pl.edu.agh.presentation.viewmodel.OrderDetailsViewModel
+import pl.edu.agh.presentation.viewmodel.OrdersListViewModel
 import pl.edu.agh.presentation.viewmodel.UserViewModel
+
+enum class ClientNavigation(route: String) {
+    OrderList("order_list"),
+    OrderDetails("order_details/{orderId}"),
+    CreateOrder("create_order"),
+    Settings("settings"),
+    Logout("logout"),
+    UnexpectedError("unexpected_error");
+
+    val route: String = AppNavigation.Client.route + "/" + route
+
+    companion object {
+        fun createOrderDetailsRoute(orderId: Int) =
+            "${AppNavigation.Client.route}/order_details/$orderId"
+    }
+}
 
 fun NavGraphBuilder.clientGraph(navController: NavHostController) {
     navigation(
-        startDestination = "client_orders", route = "client_route"
+        startDestination = ClientNavigation.OrderList.route, route = AppNavigation.Client.route
     ) {
-        composable("client_orders") {
+        composable(ClientNavigation.OrderList.route) {
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
-            val ordersViewModel = it.sharedViewModel<OrdersViewModel>(navController)
+            val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
             val userViewModel = it.sharedViewModel<UserViewModel>(navController)
             LoggedInUserLayout(navController, companyViewModel) {
-                ClientOrdersScreen(navController, ordersViewModel, userViewModel)
+                ClientOrdersScreen(navController, ordersListViewModel, userViewModel)
             }
         }
-        composable("client_order_view") {
-            Text(text = "Client order view")
+        composable(ClientNavigation.OrderDetails.route) {
+            val orderId = it.arguments?.getString("orderId")?.toInt()
+            val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            val orderDetailsViewModel = OrderDetailsViewModel(orderId!!)
+            LoggedInUserLayout(navController = navController, companyViewModel = companyViewModel) {
+                ClientOrderDetailsScreen(navController, orderDetailsViewModel)
+            }
         }
-        composable("client_new_order") {
+        composable(ClientNavigation.CreateOrder.route) {
             Text(text = "Client new order")
         }
-        composable("client_settings") {
+        composable(ClientNavigation.Settings.route) {
 
         }
-        composable("client_logout") {
+        composable(ClientNavigation.Logout.route) {
 
+        }
+        composable(ClientNavigation.UnexpectedError.route) {
+            val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            LoggedInUserLayout(navController = navController, companyViewModel = companyViewModel) {
+                UnexpectedErrorScreen()
+            }
         }
     }
 }
