@@ -61,9 +61,6 @@ fun ClientMenu(navController: NavController, showMenu: Boolean, onDismissRequest
             text = { Text(stringResource(id = R.string.menu_new_order)) },
             onClick = { navController.navigate(ClientNavigation.CreateOrder.route) })
         DropdownMenuItem(
-            text = { Text(stringResource(id = R.string.menu_settings)) },
-            onClick = { navController.navigate(ClientNavigation.Settings.route) })
-        DropdownMenuItem(
             text = { Text(stringResource(id = R.string.menu_logout)) },
             onClick = { navController.navigate(ClientNavigation.Logout.route) })
     }

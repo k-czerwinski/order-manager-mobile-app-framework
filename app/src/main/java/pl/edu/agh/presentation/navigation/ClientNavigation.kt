@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.presentation.sharedViewModel
 import pl.edu.agh.presentation.ui.client.ClientNewOrderScreen
 import pl.edu.agh.presentation.ui.client.ClientOrderDetailsScreen
@@ -21,7 +22,6 @@ enum class ClientNavigation(route: String) {
     OrdersList("orders_list"),
     OrderDetails("order_details/{orderId}"),
     CreateOrder("create_order"),
-    Settings("settings"),
     Logout("logout"),
     UnexpectedError("unexpected_error");
 
@@ -64,11 +64,13 @@ fun NavGraphBuilder.clientGraph(navController: NavHostController) {
                 ClientNewOrderScreen(navController, productListViewModel, orderCreateViewModel, ordersListViewModel)
             }
         }
-        composable(ClientNavigation.Settings.route) {
-
-        }
         composable(ClientNavigation.Logout.route) {
-
+            EncryptedSharedPreferencesManager.clearUserData()
+            navController.navigate(AppNavigation.Auth.route) {
+                popUpTo(AppNavigation.Client.route) {
+                    inclusive = true
+                }
+            }
         }
         composable(ClientNavigation.UnexpectedError.route) {
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
