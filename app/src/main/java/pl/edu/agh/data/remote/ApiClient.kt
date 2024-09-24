@@ -19,8 +19,11 @@ import pl.edu.agh.BuildConfig
 import pl.edu.agh.data.remote.dto.Company
 import pl.edu.agh.data.remote.dto.LoginRequest
 import pl.edu.agh.data.remote.dto.LoginResponse
+import pl.edu.agh.data.remote.dto.OrderCreateDTO
+import pl.edu.agh.data.remote.dto.OrderCreateResponseDTO
 import pl.edu.agh.data.remote.dto.OrderDTO
 import pl.edu.agh.data.remote.dto.OrderListViewItemDTO
+import pl.edu.agh.data.remote.dto.ProductDTO
 import pl.edu.agh.data.remote.dto.UserDTO
 import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.model.UserRole
@@ -107,6 +110,29 @@ object ApiClient {
         return when (response.status) {
             HttpStatusCode.OK -> response.body()
             else -> throw HttpResponseException(response.status, "Unexpected error fetching order details")
+        }
+    }
+
+    suspend fun getProducts(companyId: Int, userRole: UserRole) : List<ProductDTO> {
+        val response = authenticatedClient.get("${SERVER_URL}/company/${companyId}" +
+                "/${userRole.urlName}/products")
+        Log.d("ApiClient", response.toString())
+        return when (response.status) {
+            HttpStatusCode.OK -> response.body()
+            else -> throw HttpResponseException(response.status, "Unexpected error fetching products")
+        }
+    }
+
+    suspend fun createOrder(orderCreateDTO: OrderCreateDTO) : OrderCreateResponseDTO {
+        val response = authenticatedClient.post("${SERVER_URL}/company/${orderCreateDTO.companyId}" +
+                "/client/${orderCreateDTO.clientId}/order") {
+            contentType(ContentType.Application.Json)
+            setBody(orderCreateDTO)
+        }
+        Log.d("ApiClient", response.toString())
+        return when (response.status) {
+            HttpStatusCode.Created -> response.body()
+            else -> throw HttpResponseException(response.status, "Unexpected error creating order")
         }
     }
 }

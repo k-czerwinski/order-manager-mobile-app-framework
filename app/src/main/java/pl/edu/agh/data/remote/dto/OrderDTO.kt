@@ -43,3 +43,23 @@ data class ProductOrderDTO(
     val product: ProductDTO,
     val quantity: Int
 )
+
+@Serializable
+data class OrderCreateDTO(
+    val companyId: Int,
+    val products: List<OrderProductCreateDTO>,
+    val clientId: Int,
+    val name: String?,
+)
+
+@Serializable
+data class OrderProductCreateDTO(
+    val productId: Int,
+    val quantity: Int
+)
+
+@Serializable
+data class OrderCreateResponseDTO(
+    @Serializable(with = BigDecimalSerializer::class)
+    val totalPrice: BigDecimal
+)

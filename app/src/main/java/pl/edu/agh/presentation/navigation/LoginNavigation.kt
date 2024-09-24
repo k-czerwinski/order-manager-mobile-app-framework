@@ -7,9 +7,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.model.UserRole
-import pl.edu.agh.presentation.LoginInvalidCredentialsScreen
-import pl.edu.agh.presentation.LoginScreen
-import pl.edu.agh.presentation.LoginUnknownErrorScreen
+import pl.edu.agh.presentation.ui.common.LoginInvalidCredentialsScreen
+import pl.edu.agh.presentation.ui.common.LoginScreen
+import pl.edu.agh.presentation.ui.common.LoginUnknownErrorScreen
 import pl.edu.agh.presentation.sharedViewModel
 import pl.edu.agh.presentation.viewmodel.LoginViewModel
 import pl.edu.agh.presentation.viewmodel.LoginViewModel.LoginState.*

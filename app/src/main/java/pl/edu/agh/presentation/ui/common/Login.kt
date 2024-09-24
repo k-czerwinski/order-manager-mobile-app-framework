@@ -1,4 +1,4 @@
-package pl.edu.agh.presentation
+package pl.edu.agh.presentation.ui.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

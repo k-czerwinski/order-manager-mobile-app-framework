@@ -24,7 +24,7 @@ class OrderDetailsViewModel(private val orderId: Int) : ViewModel() {
                 val userRole = EncryptedSharedPreferencesManager.getUserRole()
                 val userId = EncryptedSharedPreferencesManager.getUserId()
                 val orderDetailsDTO = ApiClient.getOrderDetails(companyId, userRole, userId, orderId)
-                _orderDetailsState.value = OrderDetailsState.Success(Order.fromOrderDTO(orderDetailsDTO))
+                _orderDetailsState.value = OrderDetailsState.Success(Order.fromDTO(orderDetailsDTO))
             } catch (e: Exception) {
                 Log.d("OrdersViewModel", "Error fetching order details, order id: ${orderId}, message: ${e.message}")
                 _orderDetailsState.value = OrderDetailsState.Error("Error fetching orders: ${e.message}")

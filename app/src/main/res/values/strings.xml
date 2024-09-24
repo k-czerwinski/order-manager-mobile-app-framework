@@ -19,4 +19,15 @@
     <string name="order_status_in_delivery">In delivery</string>
     <string name="order_status_completed">Completed</string>
     <string name="user_screen_greeting">Hello</string>
+    <string name="product_price">Price: </string>
+    <string name="order_name_label">Custom order name</string>
+    <string name="order_new_button_confirm">Create order</string>
+    <string name="order_new_choose_products">Choose products</string>
+    <string name="order_new_creating_title">Creating new order</string>
+    <string name="order_new_no_product_selected_dialog_title">No product selected</string>
+    <string name="order_new_no_product_selected_dialog_description">Please select at least one product</string>
+    <string name="order_new_no_product_selected_dialog_button">Back</string>
+    <string name="order_confirmed_dialog_title">Order confirmed</string>
+    <string name="order_confirmed_dialog_description">Order has been successfully created. We will soon provide you with further updates.</string>
+    <string name="order_dialog_to_list_button">Back to orders</string>
 </resources>

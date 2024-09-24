@@ -18,6 +18,10 @@ class OrdersListViewModel : ViewModel() {
         fetchOrders()
     }
 
+    fun refreshOrders() {
+        fetchOrders()
+    }
+
     private fun fetchOrders() {
         viewModelScope.launch {
             try {

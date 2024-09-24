@@ -31,7 +31,7 @@ data class OrderListViewItem(
     val status: OrderStatus
 ) {
     companion object {
-        fun fromOrderListViewItemDTO(orderListViewItemDTO: OrderListViewItemDTO): OrderListViewItem {
+        fun fromDTO(orderListViewItemDTO: OrderListViewItemDTO): OrderListViewItem {
             val status =
                 OrderStatus.valueOf(orderListViewItemDTO.sendOn, orderListViewItemDTO.deliveredOn)
             return OrderListViewItem(
@@ -64,11 +64,11 @@ data class Order(
         private val dateTimeFormatter: DateTimeFormatter =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
-        fun fromOrderDTO(orderDTO: OrderDTO): Order {
+        fun fromDTO(orderDTO: OrderDTO): Order {
             return Order(
                 orderDTO.id,
                 orderDTO.companyId,
-                orderDTO.products.map { ProductOrder.fromProductOrderDTO(it.product, it.quantity) },
+                orderDTO.products.map { ProductOrder.fromDTO(it.product, it.quantity) },
                 orderDTO.name,
                 orderDTO.placedOn,
                 orderDTO.sendOn,
@@ -102,7 +102,7 @@ data class ProductOrder(
         get() = product.price * quantity.toBigDecimal()
 
     companion object {
-        fun fromProductOrderDTO(productDTO: ProductDTO, quantity: Int): ProductOrder {
+        fun fromDTO(productDTO: ProductDTO, quantity: Int): ProductOrder {
             return ProductOrder(Product.fromDTO(productDTO), quantity)
         }
     }

@@ -201,7 +201,7 @@ fun ProductOrderList(products: List<ProductOrder>) {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(products) { product ->
-            ProductItem(productOrder = product)
+            ProductOrderItem(productOrder = product)
         }
     }
 }
@@ -244,7 +244,7 @@ fun OrderSummary(order: Order) {
 }
 
 @Composable
-fun ProductItem(productOrder: ProductOrder) {
+fun ProductOrderItem(productOrder: ProductOrder) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
