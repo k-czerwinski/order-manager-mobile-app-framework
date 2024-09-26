@@ -1,10 +1,12 @@
 package pl.edu.agh.presentation.navigation
 
 import OrderCreateViewModel
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import pl.edu.agh.data.remote.ApiClient
 import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.presentation.sharedViewModel
 import pl.edu.agh.presentation.ui.client.ClientNewOrderScreen
@@ -61,14 +63,22 @@ fun NavGraphBuilder.clientGraph(navController: NavHostController) {
 
             orderCreateViewModel.resetOrderCreationState()
             LoggedInUserLayout(navController, companyViewModel) {
-                ClientNewOrderScreen(navController, productListViewModel, orderCreateViewModel, ordersListViewModel)
+                ClientNewOrderScreen(
+                    navController,
+                    productListViewModel,
+                    orderCreateViewModel,
+                    ordersListViewModel
+                )
             }
         }
         composable(ClientNavigation.Logout.route) {
-            EncryptedSharedPreferencesManager.clearUserData()
-            navController.navigate(AppNavigation.Auth.route) {
-                popUpTo(AppNavigation.Client.route) {
-                    inclusive = true
+            LaunchedEffect(Unit) {
+                ApiClient.logout(EncryptedSharedPreferencesManager.getRefreshToken())
+                EncryptedSharedPreferencesManager.clearUserData()
+                navController.navigate(AppNavigation.Auth.route) {
+                    popUpTo(AppNavigation.Client.route) {
+                        inclusive = true
+                    }
                 }
             }
         }

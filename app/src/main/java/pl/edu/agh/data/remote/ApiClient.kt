@@ -19,11 +19,14 @@ import pl.edu.agh.BuildConfig
 import pl.edu.agh.data.remote.dto.Company
 import pl.edu.agh.data.remote.dto.LoginRequest
 import pl.edu.agh.data.remote.dto.LoginResponse
+import pl.edu.agh.data.remote.dto.LogoutRequest
 import pl.edu.agh.data.remote.dto.OrderCreateDTO
 import pl.edu.agh.data.remote.dto.OrderCreateResponseDTO
 import pl.edu.agh.data.remote.dto.OrderDTO
 import pl.edu.agh.data.remote.dto.OrderListViewItemDTO
 import pl.edu.agh.data.remote.dto.ProductDTO
+import pl.edu.agh.data.remote.dto.RefreshTokenRequest
+import pl.edu.agh.data.remote.dto.RefreshTokenResponse
 import pl.edu.agh.data.remote.dto.UserDTO
 import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.model.UserRole
@@ -49,7 +52,20 @@ object ApiClient {
                 loadTokens {
                     BearerTokens(
                         accessToken = EncryptedSharedPreferencesManager.getAccessToken(),
-                        refreshToken = "s"
+                        refreshToken = EncryptedSharedPreferencesManager.getRefreshToken()
+                    )
+                }
+                refreshTokens {
+                    val companyId = EncryptedSharedPreferencesManager.getCompanyId()
+                    val userId = EncryptedSharedPreferencesManager.getUserId()
+                    val userRole = EncryptedSharedPreferencesManager.getUserRole()
+                    val oldRefreshToken = EncryptedSharedPreferencesManager.getRefreshToken()
+
+                    val refreshTokenResponse = refreshToken(companyId, userRole, userId, oldRefreshToken)
+                    EncryptedSharedPreferencesManager.saveRefreshedTokens(refreshTokenResponse)
+                    BearerTokens(
+                        accessToken = refreshTokenResponse.accessToken,
+                        refreshToken = refreshTokenResponse.refreshToken
                     )
                 }
             }
@@ -74,6 +90,27 @@ object ApiClient {
                 "Unexpected error during login"
             )
         }
+    }
+    
+    private suspend fun refreshToken(companyId: Int, userRole: UserRole, clientId: Int, refreshToken: String): RefreshTokenResponse {
+        val response = anonymousClient.post("${SERVER_URL}/company/${companyId}/${userRole.urlName}/${clientId}/refresh-token") {
+            setBody(RefreshTokenRequest(refreshToken))
+            contentType(ContentType.Application.Json)
+        }
+        Log.d("ApiClient", "Refresh token response: $response")
+        return when(response.status) {
+            HttpStatusCode.OK -> response.body()
+            else -> throw HttpResponseException(response.status, "Invalid or expired refresh token or unexpected error")
+        }
+
+    }
+
+    suspend fun logout(refreshToken: String) {
+        val response = anonymousClient.post("${SERVER_URL}/logout") {
+            setBody(LogoutRequest(refreshToken))
+            contentType(ContentType.Application.Json)
+        }
+        Log.d("ApiClient", response.toString())
     }
 
     suspend fun getCompany(companyId: Int) : Company {

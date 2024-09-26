@@ -5,12 +5,14 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import pl.edu.agh.data.remote.dto.LoginResponse
+import pl.edu.agh.data.remote.dto.RefreshTokenResponse
 import pl.edu.agh.model.UserRole
 
 object EncryptedSharedPreferencesManager {
 
     private const val PREFS_FILENAME = "secure_prefs"
     private const val ACCESS_TOKEN_KEY = "access_token"
+    private const val REFRESH_TOKEN_KEY = "refresh_token"
     private const val USER_ID_KEY = "user_id"
     private const val USER_ROLE_KEY = "user_role"
     private const val COMPANY_ID_KEY = "company_id"
@@ -35,13 +37,23 @@ object EncryptedSharedPreferencesManager {
 
     fun saveLoggedInUser(loginResponse: LoginResponse) {
         saveAccessToken(loginResponse.accessToken)
+        saveRefreshToken(loginResponse.refreshToken)
         saveUserId(loginResponse.userId)
         saveUserRole(loginResponse.userRole)
         saveCompanyId(loginResponse.companyId)
     }
 
+    fun saveRefreshedTokens(refreshTokenResponse: RefreshTokenResponse) {
+        saveAccessToken(refreshTokenResponse.accessToken)
+        saveRefreshToken(refreshTokenResponse.refreshToken)
+    }
+
     private fun saveAccessToken(token: String) {
         saveProperty(ACCESS_TOKEN_KEY, token)
+    }
+
+    private fun saveRefreshToken(token: String) {
+        saveProperty(REFRESH_TOKEN_KEY, token)
     }
 
     private fun saveUserId(userId: Int) {
@@ -58,6 +70,10 @@ object EncryptedSharedPreferencesManager {
 
     fun getAccessToken(): String {
         return getStringProperty(ACCESS_TOKEN_KEY)
+    }
+
+    fun getRefreshToken(): String {
+        return getStringProperty(REFRESH_TOKEN_KEY)
     }
 
     fun getCompanyId(): Int {
@@ -86,14 +102,6 @@ object EncryptedSharedPreferencesManager {
                 is Int -> putInt(key, value)
                 else -> putString(key, value.toString())
             }
-            apply()
-        }
-    }
-
-    private fun removeProperty(key: String) {
-        checkInitialized()
-        with(sharedPreferences.edit()) {
-            remove(key)
             apply()
         }
     }
