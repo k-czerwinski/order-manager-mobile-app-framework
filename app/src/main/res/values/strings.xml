@@ -18,6 +18,10 @@
     <string name="order_status_in_progress">In progress</string>
     <string name="order_status_in_delivery">In delivery</string>
     <string name="order_status_completed">Completed</string>
+    <string name="order_total_price">Total Price: %1$s</string>
+    <string name="order_expected_delivery_on">Expected delivery: %1$s</string>
+    <string name="order_delivered_on">Delivered: %1$s</string>
+    <string name="order_placed_on">Placed on: %1$s</string>
     <string name="user_screen_greeting">Hello</string>
     <string name="product_price">Price: </string>
     <string name="order_name_label">Custom order name</string>

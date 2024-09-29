@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -28,13 +27,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import pl.edu.agh.R
 import pl.edu.agh.model.Order
 import pl.edu.agh.model.OrderListViewItem
 import pl.edu.agh.model.OrderStatus
 import pl.edu.agh.model.ProductOrder
-import pl.edu.agh.presentation.navigation.ClientNavigation
 
 @Composable
 fun OrderStatusWithDescription(status: OrderStatus) {
@@ -108,7 +105,7 @@ fun OrderItem(order: OrderListViewItem, onClick: () -> Unit) {
 }
 
 @Composable
-fun OrdersList(orders: List<OrderListViewItem>, navController: NavController) {
+fun OrdersList(orders: List<OrderListViewItem>, navigateToOrderDetails: (orderId: Int) -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(0.dp),
@@ -117,7 +114,7 @@ fun OrdersList(orders: List<OrderListViewItem>, navController: NavController) {
         items(orders) { order ->
             OrderItem(
                 order = order,
-                onClick = { navController.navigate(ClientNavigation.createOrderDetailsRoute(order.id)) })
+                onClick = { navigateToOrderDetails(order.id) })
         }
     }
 }
@@ -143,11 +140,11 @@ fun OrderListGreetings(userName: String) {
 }
 
 @Composable
-fun OrdersScreen(
+fun OrderListScreen(
     userName: String,
     orders: List<OrderListViewItem>,
-    onNewOrderClick: () -> Unit,
-    navController: NavController
+    navigateToOrderDetails: (orderId: Int) -> Unit,
+    bottomButton: @Composable () -> Unit
 ) {
     val sortedOrders = orders.sortedByDescending { it.date }
 
@@ -161,17 +158,12 @@ fun OrdersScreen(
         ) {
             OrderListGreetings(userName)
             Spacer(modifier = Modifier.height(16.dp))
-            OrdersList(orders = sortedOrders, navController = navController)
+            OrdersList(orders = sortedOrders, navigateToOrderDetails = navigateToOrderDetails)
         }
-
-        Button(
-            onClick = { onNewOrderClick() },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = "New Order")
+        Box(modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .fillMaxWidth()) {
+            bottomButton()
         }
     }
 }
@@ -224,17 +216,23 @@ fun OrderSummary(order: Order) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Total Price: ${order.totalPrice}",
+                text = stringResource(R.string.order_total_price, order.totalPrice),
                 fontSize = 17.sp,
                 color = Color.Gray
             )
             Text(
-                text = "Placed On: ${order.getFormattedPlacedOn()}",
+                text = stringResource(R.string.order_placed_on, order.getFormattedPlacedOn()),
                 fontSize = 17.sp,
                 color = Color.Gray
             )
             Text(
-                text = "Delivery: ${order.getFormattedExpectedDeliveryOn()}",
+                text =
+                if (order.deliveredOn != null) stringResource(
+                    R.string.order_delivered_on,
+                    order.getFormattedDeliveredOn()
+                ) else stringResource(
+                    R.string.order_expected_delivery_on, order.getFormattedExpectedDeliveryOn()
+                ),
                 fontSize = 17.sp,
                 color = Color.Gray
             )

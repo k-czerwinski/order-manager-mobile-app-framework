@@ -11,7 +11,7 @@ import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.presentation.sharedViewModel
 import pl.edu.agh.presentation.ui.client.ClientNewOrderScreen
 import pl.edu.agh.presentation.ui.client.ClientOrderDetailsScreen
-import pl.edu.agh.presentation.ui.client.LoggedInUserLayout
+import pl.edu.agh.presentation.ui.client.LoggedInClientLayout
 import pl.edu.agh.presentation.ui.client.ClientOrdersScreen
 import pl.edu.agh.presentation.ui.common.UnexpectedErrorScreen
 import pl.edu.agh.presentation.viewmodel.CompanyViewModel
@@ -43,7 +43,7 @@ fun NavGraphBuilder.clientGraph(navController: NavHostController) {
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
             val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
             val userViewModel = it.sharedViewModel<UserViewModel>(navController)
-            LoggedInUserLayout(navController, companyViewModel) {
+            LoggedInClientLayout(navController, companyViewModel) {
                 ClientOrdersScreen(navController, ordersListViewModel, userViewModel)
             }
         }
@@ -51,8 +51,8 @@ fun NavGraphBuilder.clientGraph(navController: NavHostController) {
             val orderId = it.arguments?.getString("orderId")?.toInt()
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
             val orderDetailsViewModel = OrderDetailsViewModel(orderId!!)
-            LoggedInUserLayout(navController = navController, companyViewModel = companyViewModel) {
-                ClientOrderDetailsScreen(navController, orderDetailsViewModel)
+            LoggedInClientLayout(navController = navController, companyViewModel = companyViewModel) {
+                ClientOrderDetailsScreen(orderDetailsViewModel)
             }
         }
         composable(ClientNavigation.CreateOrder.route) {
@@ -62,7 +62,7 @@ fun NavGraphBuilder.clientGraph(navController: NavHostController) {
             val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
 
             orderCreateViewModel.resetOrderCreationState()
-            LoggedInUserLayout(navController, companyViewModel) {
+            LoggedInClientLayout(navController, companyViewModel) {
                 ClientNewOrderScreen(
                     navController,
                     productListViewModel,
@@ -84,7 +84,7 @@ fun NavGraphBuilder.clientGraph(navController: NavHostController) {
         }
         composable(ClientNavigation.UnexpectedError.route) {
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
-            LoggedInUserLayout(navController = navController, companyViewModel = companyViewModel) {
+            LoggedInClientLayout(navController = navController, companyViewModel = companyViewModel) {
                 UnexpectedErrorScreen()
             }
         }

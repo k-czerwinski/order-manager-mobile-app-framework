@@ -1,28 +1,70 @@
 package pl.edu.agh.presentation.navigation
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import pl.edu.agh.Greeting
+import pl.edu.agh.data.remote.ApiClient
+import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
+import pl.edu.agh.presentation.sharedViewModel
+import pl.edu.agh.presentation.ui.courier.CourierOrderDetailsScreen
+import pl.edu.agh.presentation.ui.courier.CourierOrderListScreen
+import pl.edu.agh.presentation.ui.courier.LoggedInCourierLayout
+import pl.edu.agh.presentation.viewmodel.CompanyViewModel
+import pl.edu.agh.presentation.viewmodel.OrderDetailsViewModel
+import pl.edu.agh.presentation.viewmodel.OrdersListViewModel
+import pl.edu.agh.presentation.viewmodel.UserViewModel
 
 enum class CourierNavigation(route: String) {
-    OrdersList("orders_list");
+    OrdersList("orders_list"),
+    OrderDetails("order_details/{orderId}"),
+    Logout("logout");
 
     val route: String = AppNavigation.Courier.route + "/" + route
+
+    companion object {
+        fun createOrderDetailsRoute(orderId: Int) =
+            "${AppNavigation.Courier.route}/order_details/$orderId"
+    }
 }
 
 fun NavGraphBuilder.courierGraph(navController: NavHostController) {
     navigation(
         startDestination = CourierNavigation.OrdersList.route, route = AppNavigation.Courier.route
     ) {
-        courierOrdersList()
+        courierOrdersList(navController)
     }
 }
 
-fun NavGraphBuilder.courierOrdersList() {
+fun NavGraphBuilder.courierOrdersList(navController: NavHostController) {
     composable(CourierNavigation.OrdersList.route) {
-        // TODO: Implement Courier Home Screen
-        Greeting(name = "COURIER")
+        val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+        val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
+        val userViewModel = it.sharedViewModel<UserViewModel>(navController)
+        LoggedInCourierLayout (navController, companyViewModel) {
+            CourierOrderListScreen(navController, ordersListViewModel, userViewModel)
+        }
+    }
+
+    composable(CourierNavigation.OrderDetails.route) {
+        val orderId = it.arguments?.getString("orderId")?.toInt()
+        val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+        val orderDetailsViewModel = OrderDetailsViewModel(orderId!!)
+        LoggedInCourierLayout(navController = navController, companyViewModel = companyViewModel) {
+            CourierOrderDetailsScreen(orderDetailsViewModel)
+        }
+    }
+
+    composable(CourierNavigation.Logout.route) {
+        LaunchedEffect(Unit) {
+            ApiClient.logout(EncryptedSharedPreferencesManager.getRefreshToken())
+            EncryptedSharedPreferencesManager.clearUserData()
+            navController.navigate(AppNavigation.Auth.route) {
+                popUpTo(AppNavigation.Courier.route) {
+                    inclusive = true
+                }
+            }
+        }
     }
 }

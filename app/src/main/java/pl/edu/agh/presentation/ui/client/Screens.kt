@@ -1,10 +1,15 @@
 package pl.edu.agh.presentation.ui.client
 
 import OrderCreateViewModel
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import pl.edu.agh.data.remote.dto.OrderListViewItemDTO
@@ -12,7 +17,7 @@ import pl.edu.agh.model.OrderListViewItem
 import pl.edu.agh.presentation.navigation.ClientNavigation
 import pl.edu.agh.presentation.ui.common.CenteredCircularProgressIndicator
 import pl.edu.agh.presentation.ui.common.OrderDetailScreen
-import pl.edu.agh.presentation.ui.common.OrdersScreen
+import pl.edu.agh.presentation.ui.common.OrderListScreen
 import pl.edu.agh.presentation.ui.common.UnexpectedErrorScreen
 import pl.edu.agh.presentation.viewmodel.OrderDetailsViewModel
 import pl.edu.agh.presentation.viewmodel.OrdersListViewModel
@@ -31,19 +36,24 @@ fun ClientOrdersScreen(
     val userState by userViewModel.userState.collectAsState()
     val userName = (userState as? UserViewModel.UserState.Success)?.userDTO?.firstName ?: "User"
 
-    OrdersScreen(
+    OrderListScreen(
         userName,
         orders.map(OrderListViewItem::fromDTO),
-        onNewOrderClick = { navController.navigate(ClientNavigation.CreateOrder.route) },
-        navController
-    )
+        navigateToOrderDetails = { navController.navigate(ClientNavigation.createOrderDetailsRoute(it)) }
+    ) {
+        Button(
+            onClick = { navController.navigate(ClientNavigation.CreateOrder.route) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(text = "New Order")
+        }
+    }
 }
 
 @Composable
-fun ClientOrderDetailsScreen(
-    navController: NavController,
-    orderDetailsViewModel: OrderDetailsViewModel
-) {
+fun ClientOrderDetailsScreen(orderDetailsViewModel: OrderDetailsViewModel) {
     val orderDetailsState by orderDetailsViewModel.orderDetailsState.collectAsState()
     when (orderDetailsState) {
         is OrderDetailsViewModel.OrderDetailsState.Success -> {

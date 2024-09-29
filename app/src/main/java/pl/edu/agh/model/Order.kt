@@ -89,6 +89,10 @@ data class Order(
         return expectedDeliveryOn?.let { getFormattedDateTime(it) } ?: ""
     }
 
+    fun getFormattedDeliveredOn(): String {
+        return if (deliveredOn == null) "" else getFormattedDateTime(deliveredOn)
+    }
+
     private fun getFormattedDateTime(localDateTime: LocalDateTime): String {
         return dateTimeFormatter.format(localDateTime.toJavaLocalDateTime())
     }

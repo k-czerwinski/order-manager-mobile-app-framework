@@ -1,4 +1,4 @@
-package pl.edu.agh.presentation.ui.client
+package pl.edu.agh.presentation.ui.courier
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -15,15 +15,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import pl.edu.agh.R
-import pl.edu.agh.presentation.navigation.ClientNavigation
+import pl.edu.agh.presentation.navigation.CourierNavigation
 import pl.edu.agh.presentation.ui.common.AppMenu
-import pl.edu.agh.presentation.ui.common.BackNavigationIcon
 import pl.edu.agh.presentation.ui.common.AppScreen
 import pl.edu.agh.presentation.ui.common.AppTopBar
+import pl.edu.agh.presentation.ui.common.BackNavigationIcon
 import pl.edu.agh.presentation.viewmodel.CompanyViewModel
 
 @Composable
-fun ClientTopBar(
+fun CourierTopBar(
     navController: NavController, companyViewModel: CompanyViewModel
 ) {
     var showMenu by remember { mutableStateOf(false) }
@@ -40,7 +40,7 @@ fun ClientTopBar(
                     contentDescription = "Menu"
                 )
             }
-            ClientMenu(
+            CourierMenu(
                 navController = navController,
                 showMenu = showMenu,
                 onDismissRequest = { showMenu = false })
@@ -52,27 +52,24 @@ fun ClientTopBar(
 }
 
 @Composable
-fun ClientMenu(navController: NavController, showMenu: Boolean, onDismissRequest: () -> Unit) {
+fun CourierMenu(navController: NavController, showMenu: Boolean, onDismissRequest: () -> Unit) {
     AppMenu(showMenu = showMenu, onDismissRequest = onDismissRequest) {
         DropdownMenuItem(
             text = { Text(stringResource(id = R.string.menu_orders)) },
-            onClick = { navController.navigate(ClientNavigation.OrdersList.route) })
-        DropdownMenuItem(
-            text = { Text(stringResource(id = R.string.menu_new_order)) },
-            onClick = { navController.navigate(ClientNavigation.CreateOrder.route) })
+            onClick = { navController.navigate(CourierNavigation.OrdersList.route) })
         DropdownMenuItem(
             text = { Text(stringResource(id = R.string.menu_logout)) },
-            onClick = { navController.navigate(ClientNavigation.Logout.route) })
+            onClick = { navController.navigate(CourierNavigation.Logout.route) })
     }
 }
 
 @Composable
-fun LoggedInClientLayout(
+fun LoggedInCourierLayout(
     navController: NavController, companyViewModel: CompanyViewModel,
     content: @Composable () -> Unit
 ) {
     AppScreen(topBar = {
-        ClientTopBar(
+        CourierTopBar(
             navController = navController,
             companyViewModel = companyViewModel
         )
