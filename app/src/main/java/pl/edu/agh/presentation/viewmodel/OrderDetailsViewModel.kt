@@ -14,10 +14,10 @@ class OrderDetailsViewModel(private val orderId: Int) : ViewModel() {
     private val _orderDetailsState = MutableStateFlow<OrderDetailsState>(OrderDetailsState.Empty)
     val orderDetailsState: StateFlow<OrderDetailsState> = _orderDetailsState
     init {
-        fetchOrders()
+        fetchOrderDetails()
     }
 
-    private fun fetchOrders() {
+    private fun fetchOrderDetails() {
         viewModelScope.launch {
             try {
                 val companyId = EncryptedSharedPreferencesManager.getCompanyId()

@@ -52,7 +52,7 @@ fun NavGraphBuilder.courierOrdersList(navController: NavHostController) {
         val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
         val orderDetailsViewModel = OrderDetailsViewModel(orderId!!)
         LoggedInCourierLayout(navController = navController, companyViewModel = companyViewModel) {
-            CourierOrderDetailsScreen(orderDetailsViewModel)
+            CourierOrderDetailsScreen(navController, orderDetailsViewModel)
         }
     }
 

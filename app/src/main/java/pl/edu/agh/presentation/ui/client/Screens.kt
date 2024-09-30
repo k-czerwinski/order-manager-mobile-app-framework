@@ -9,9 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import pl.edu.agh.R
 import pl.edu.agh.data.remote.dto.OrderListViewItemDTO
 import pl.edu.agh.model.OrderListViewItem
 import pl.edu.agh.presentation.navigation.ClientNavigation
@@ -47,7 +49,7 @@ fun ClientOrdersScreen(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text(text = "New Order")
+            Text(text = stringResource(R.string.button_new_order))
         }
     }
 }
@@ -59,7 +61,7 @@ fun ClientOrderDetailsScreen(orderDetailsViewModel: OrderDetailsViewModel) {
         is OrderDetailsViewModel.OrderDetailsState.Success -> {
             val order =
                 (orderDetailsState as? OrderDetailsViewModel.OrderDetailsState.Success)?.order
-            OrderDetailScreen(order!!)
+            OrderDetailScreen(order!!, actionButtons = {})
         }
 
         is OrderDetailsViewModel.OrderDetailsState.Error -> {

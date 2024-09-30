@@ -169,7 +169,7 @@ fun OrderListScreen(
 }
 
 @Composable
-fun OrderDetailScreen(order: Order) {
+fun OrderDetailScreen(order: Order, actionButtons: @Composable () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -181,6 +181,11 @@ fun OrderDetailScreen(order: Order) {
             OrderSummary(order = order)
             Spacer(modifier = Modifier.height(16.dp))
             ProductOrderList(products = order.products)
+        }
+        Box(modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .fillMaxWidth()) {
+            actionButtons()
         }
     }
 }
