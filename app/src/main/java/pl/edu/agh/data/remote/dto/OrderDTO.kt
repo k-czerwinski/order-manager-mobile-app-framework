@@ -63,3 +63,8 @@ data class OrderCreateResponseDTO(
     @Serializable(with = BigDecimalSerializer::class)
     val totalPrice: BigDecimal
 )
+
+@Serializable
+data class ExpectedDeliveryDateTimeDTO(
+    val expectedDelivery: LocalDateTime
+)

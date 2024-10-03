@@ -10,15 +10,18 @@ import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.presentation.sharedViewModel
 import pl.edu.agh.presentation.ui.courier.CourierOrderDetailsScreen
 import pl.edu.agh.presentation.ui.courier.CourierOrderListScreen
+import pl.edu.agh.presentation.ui.courier.CourierOrderSetExpectedDeliveryScreen
 import pl.edu.agh.presentation.ui.courier.LoggedInCourierLayout
 import pl.edu.agh.presentation.viewmodel.CompanyViewModel
 import pl.edu.agh.presentation.viewmodel.OrderDetailsViewModel
+import pl.edu.agh.presentation.viewmodel.OrderSetExpectedDeliveryViewModel
 import pl.edu.agh.presentation.viewmodel.OrdersListViewModel
 import pl.edu.agh.presentation.viewmodel.UserViewModel
 
 enum class CourierNavigation(route: String) {
     OrdersList("orders_list"),
     OrderDetails("order_details/{orderId}"),
+    OrderExpectedDeliverySet("order_expected_delivery/{orderId}"),
     Logout("logout");
 
     val route: String = AppNavigation.Courier.route + "/" + route
@@ -26,6 +29,22 @@ enum class CourierNavigation(route: String) {
     companion object {
         fun createOrderDetailsRoute(orderId: Int) =
             "${AppNavigation.Courier.route}/order_details/$orderId"
+
+        fun navigateToOrderDetailsRoute(navController: NavHostController, orderId: Int) {
+            navController.navigate(createOrderDetailsRoute(orderId)) {
+                popUpTo(navController.currentBackStackEntry?.destination?.route ?: "") {
+                    inclusive = true
+                }
+            }
+        }
+
+        fun navigateToOrderExpectedDeliveryRoute(navController: NavHostController, orderId: Int) {
+            navController.navigate("${AppNavigation.Courier.route}/order_expected_delivery/$orderId") {
+                popUpTo(navController.currentBackStackEntry?.destination?.route ?: "") {
+                    inclusive = true
+                }
+            }
+        }
     }
 }
 
@@ -42,7 +61,7 @@ fun NavGraphBuilder.courierOrdersList(navController: NavHostController) {
         val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
         val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
         val userViewModel = it.sharedViewModel<UserViewModel>(navController)
-        LoggedInCourierLayout (navController, companyViewModel) {
+        LoggedInCourierLayout(navController, companyViewModel) {
             CourierOrderListScreen(navController, ordersListViewModel, userViewModel)
         }
     }
@@ -53,6 +72,19 @@ fun NavGraphBuilder.courierOrdersList(navController: NavHostController) {
         val orderDetailsViewModel = OrderDetailsViewModel(orderId!!)
         LoggedInCourierLayout(navController = navController, companyViewModel = companyViewModel) {
             CourierOrderDetailsScreen(navController, orderDetailsViewModel)
+        }
+    }
+
+    composable(CourierNavigation.OrderExpectedDeliverySet.route) {
+        val orderId = it.arguments?.getString("orderId")?.toInt()
+        val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+        val orderDetailsViewModel = OrderDetailsViewModel(orderId!!)
+        LoggedInCourierLayout(navController = navController, companyViewModel = companyViewModel) {
+            CourierOrderSetExpectedDeliveryScreen(
+                navController,
+                orderDetailsViewModel,
+                OrderSetExpectedDeliveryViewModel()
+            )
         }
     }
 

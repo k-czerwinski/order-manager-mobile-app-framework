@@ -82,7 +82,7 @@ fun ProductItem(product: Product, onQuantityChange: (Int) -> Unit, quantity: Int
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = stringResource(R.string.product_price) + product.price,
+                    text = stringResource(R.string.product_price, product.price),
                     fontSize = 14.sp,
                     color = Color.Gray,
                     modifier = Modifier

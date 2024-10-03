@@ -1,18 +1,35 @@
 package pl.edu.agh.presentation.ui.courier
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DisplayMode
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimeInput
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,8 +40,13 @@ import pl.edu.agh.model.Order
 import pl.edu.agh.model.OrderStatus
 import pl.edu.agh.presentation.navigation.CourierNavigation
 import pl.edu.agh.presentation.ui.common.CenteredCircularProgressIndicator
+import pl.edu.agh.presentation.ui.common.OrderSummary
 import pl.edu.agh.presentation.viewmodel.OrderSetDeliveredViewModel
 import pl.edu.agh.presentation.viewmodel.OrderSetDeliveredViewModel.OrderDeliveredState
+import pl.edu.agh.presentation.viewmodel.OrderSetExpectedDeliveryViewModel
+import pl.edu.agh.presentation.viewmodel.OrderSetExpectedDeliveryViewModel.OrderExpectedDeliveryState
+import java.time.LocalDate
+import java.util.Calendar
 
 @Composable
 fun CourierOrderDetailsActionButtons(
@@ -57,14 +79,10 @@ fun CourierOrderDetailsActionButtons(
     }
     if (isDeliveredConfirmedDialogVisible) {
         when (orderedDeliveredState) {
-            is OrderDeliveredState.Success -> OrderMarkedAsDelivered(
+            is OrderDeliveredState.Success -> OrderSuccessfullyMarkedAsDeliveredDialog(
                 onDismissButton = {
                     isDeliveredConfirmedDialogVisible = false
-                    navController.navigate(CourierNavigation.createOrderDetailsRoute(order.id)) {
-                        popUpTo(navController.currentBackStackEntry?.destination?.route ?: "") {
-                            inclusive = true
-                        }
-                    }
+                    CourierNavigation.navigateToOrderDetailsRoute(navController, order.id)
                 }
             )
 
@@ -76,7 +94,18 @@ fun CourierOrderDetailsActionButtons(
                 })
         }
     }
-    //TODO "Update expected delivery button"
+    if (order.status != OrderStatus.COMPLETED) {
+        Button(
+            onClick = {
+                CourierNavigation.navigateToOrderExpectedDeliveryRoute(navController, order.id)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(text = stringResource(R.string.courier_update_expected_delivery_button))
+        }
+    }
 }
 
 @Composable
@@ -111,27 +140,12 @@ fun OrderMarkAsDeliveredAlert(onConfirmButton: () -> Unit, onDismissButton: () -
 }
 
 @Composable
-fun OrderMarkedAsDelivered(onDismissButton: () -> Unit) {
-    AlertDialog(
-        icon = {
-            Icon(
-                painterResource(R.drawable.ic_order_completed),
-                contentDescription = "Order has been marked as delivered"
-            )
-        },
-        title = {
-            Text(text = stringResource(R.string.order_delivered_dialog_title))
-        },
-        text = {
-            Text(text = stringResource(R.string.order_delivered_dialog_description))
-        },
-        onDismissRequest = onDismissButton,
-        confirmButton = {},
-        dismissButton = {
-            TextButton(onClick = onDismissButton) {
-                Text(stringResource(R.string.order_dialog_to_list_button))
-            }
-        }
+fun OrderSuccessfullyMarkedAsDeliveredDialog(onDismissButton: () -> Unit) {
+    OrderDetailsDialog(
+        R.drawable.ic_order_completed,
+        stringResource(R.string.order_delivered_dialog_title),
+        stringResource(R.string.order_delivered_dialog_description),
+        onDismissButton
     )
 }
 
@@ -139,18 +153,53 @@ fun OrderMarkedAsDelivered(onDismissButton: () -> Unit) {
 fun OrderCouldNotBeMarkedAsDelivered(
     onDismissButton: () -> Unit
 ) {
+    OrderDetailsDialog(
+        R.drawable.error,
+        stringResource(R.string.order_set_delivered_error_dialog_title),
+        stringResource(R.string.order_set_delivered_error_dialog_description),
+        onDismissButton
+    )
+}
+
+@Composable
+fun OrderExpectedDeliverySetSuccessfullyDialog(onDismissButton: () -> Unit) {
+    OrderDetailsDialog(
+        R.drawable.ic_order_completed,
+        stringResource(R.string.order_expected_delivery_set_successfully_dialog_title),
+        stringResource(R.string.order_expected_delivery_set_successfully_dialog_description),
+        onDismissButton
+    )
+}
+
+@Composable
+fun OrderExpectedDeliverySetErrorDialog(onDismissButton: () -> Unit) {
+    OrderDetailsDialog(
+        R.drawable.error,
+        stringResource(R.string.order_expected_delivery_set_error_dialog_title),
+        stringResource(R.string.order_expected_delivery_set_error_dialog_description),
+        onDismissButton
+    )
+}
+
+@Composable
+fun OrderDetailsDialog(
+    @DrawableRes icon: Int,
+    title: String,
+    description: String,
+    onDismissButton: () -> Unit
+) {
     AlertDialog(
         icon = {
             Icon(
-                painterResource(R.drawable.error),
-                contentDescription = "Unexpected error when marking order as delivered"
+                painterResource(icon),
+                contentDescription = title
             )
         },
         title = {
-            Text(text = stringResource(R.string.order_set_delivered_error_dialog_title))
+            Text(title)
         },
         text = {
-            Text(text = stringResource(R.string.order_set_delivered_error_dialog_description))
+            Text(description)
         },
         onDismissRequest = onDismissButton,
         confirmButton = {},
@@ -158,8 +207,129 @@ fun OrderCouldNotBeMarkedAsDelivered(
             TextButton(
                 onClick = onDismissButton
             ) {
-                Text(stringResource(R.string.order_set_delivered_error_dialog_dismiss_button))
+                Text(stringResource(R.string.order_dialog_to_order_details_button))
             }
         }
     )
+}
+
+@Composable
+fun OrderSetExpectedDelivery(
+    navController: NavHostController,
+    order: Order,
+    orderSetExpectedDeliveryViewModel: OrderSetExpectedDeliveryViewModel
+) {
+    val orderSetExpectedDeliveryState by orderSetExpectedDeliveryViewModel.orderExpectedDeliveryState.collectAsState()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            OrderSummary(order = order)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            when (orderSetExpectedDeliveryState) {
+                is OrderExpectedDeliveryState.Initial -> {
+                    ExpectedDeliverySetting { selectedDateMilliseconds, selectedHour, selectedMinute ->
+                        orderSetExpectedDeliveryViewModel.setOrderDelivered(
+                            order,
+                            selectedDateMilliseconds,
+                            selectedHour,
+                            selectedMinute
+                        )
+                    }
+                }
+
+                is OrderExpectedDeliveryState.Loading -> CenteredCircularProgressIndicator()
+                is OrderExpectedDeliveryState.Error -> {
+                    orderSetExpectedDeliveryViewModel.resetOrderExpectedDeliveryState()
+                    OrderExpectedDeliverySetErrorDialog(onDismissButton = {
+                        CourierNavigation.navigateToOrderDetailsRoute(navController, order.id)
+                    })
+                }
+                is OrderExpectedDeliveryState.Success -> {
+                    OrderExpectedDeliverySetSuccessfullyDialog {
+                        CourierNavigation.navigateToOrderDetailsRoute(navController, order.id)
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExpectedDeliverySetting(onSelectedDateTime: (selectedDateMilliseconds: Long, selectedHour: Int, selectedMinute: Int) -> Unit) {
+    val currentDateMillisecond = LocalDate.now().toEpochDay() * 86_400_000
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = currentDateMillisecond,
+        initialDisplayMode = DisplayMode.Input,
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis >= currentDateMillisecond
+            }
+        }
+    )
+    val currentTime = Calendar.getInstance()
+    val timePickerState = rememberTimePickerState(
+        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
+        initialMinute = currentTime.get(Calendar.MINUTE),
+        is24Hour = true,
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.order_set_expected_delivery_label),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            DatePicker(
+                state = datePickerState,
+                showModeToggle = false,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                TimeInput(
+                    state = timePickerState,
+                    modifier = Modifier.wrapContentWidth()
+                )
+            }
+
+            Button(
+                onClick = {
+                    if (datePickerState.selectedDateMillis != null) {
+                        onSelectedDateTime(
+                            datePickerState.selectedDateMillis!!,
+                            timePickerState.hour,
+                            timePickerState.minute
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.order_expected_delivery_set_button_confirm))
+            }
+        }
+    }
 }

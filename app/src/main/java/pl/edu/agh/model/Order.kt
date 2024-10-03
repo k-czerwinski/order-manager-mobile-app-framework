@@ -13,12 +13,12 @@ enum class OrderStatus {
 
     companion object {
         fun valueOf(sendOn: LocalDateTime?, deliveredOn: LocalDateTime?): OrderStatus {
-            return if (sendOn == null) {
-                IN_PROGRESS
-            } else if (deliveredOn == null) {
+            return if (deliveredOn != null) {
+                COMPLETED
+            } else if (sendOn != null) {
                 IN_DELIVERY
             } else {
-                COMPLETED
+                IN_PROGRESS
             }
         }
     }

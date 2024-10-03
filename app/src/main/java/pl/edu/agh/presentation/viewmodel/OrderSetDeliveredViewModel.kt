@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import pl.edu.agh.data.remote.ApiClient
 import pl.edu.agh.model.Order
 
-class OrderSetDeliveredViewModel() : ViewModel() {
+class OrderSetDeliveredViewModel : ViewModel() {
     private val _orderDeliveredState =
         MutableStateFlow<OrderDeliveredState>(OrderDeliveredState.Initial)
     val orderDeliveredState: StateFlow<OrderDeliveredState> = _orderDeliveredState
@@ -25,7 +25,7 @@ class OrderSetDeliveredViewModel() : ViewModel() {
                 ApiClient.markOrderAsDelivered(order.companyId, order.courierId, order.id)
                 _orderDeliveredState.value = OrderDeliveredState.Success
             } catch (e: Exception) {
-                _orderDeliveredState.value = OrderDeliveredState.Error("Failed to create order")
+                _orderDeliveredState.value = OrderDeliveredState.Error("Failed to set order as delivered")
             }
         }
     }

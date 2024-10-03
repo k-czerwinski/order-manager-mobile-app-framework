@@ -16,8 +16,10 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.datetime.LocalDateTime
 import pl.edu.agh.BuildConfig
 import pl.edu.agh.data.remote.dto.Company
+import pl.edu.agh.data.remote.dto.ExpectedDeliveryDateTimeDTO
 import pl.edu.agh.data.remote.dto.LoginRequest
 import pl.edu.agh.data.remote.dto.LoginResponse
 import pl.edu.agh.data.remote.dto.LogoutRequest
@@ -182,6 +184,18 @@ object ApiClient {
         Log.d("ApiClient", response.toString())
         if (response.status != HttpStatusCode.NoContent) {
             throw HttpResponseException(response.status, "Unexpected error when marking order as delivered")
+        }
+    }
+
+    suspend fun setExpectedDeliveryDateTime(companyId: Int, courierId: Int, orderId: Int, newExpectedDelivery: LocalDateTime) {
+        val response = authenticatedClient.put("${SERVER_URL}/company/${companyId}" +
+                "/courier/${courierId}/order/${orderId}/expected-delivery") {
+            contentType(ContentType.Application.Json)
+            setBody(ExpectedDeliveryDateTimeDTO(newExpectedDelivery))
+        }
+        Log.d("ApiClient", response.toString())
+        if (response.status != HttpStatusCode.NoContent) {
+            throw HttpResponseException(response.status, "Unexpected error when setting expected delivery date")
         }
     }
 }

@@ -126,13 +126,13 @@ fun OrderListGreetings(userName: String) {
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            text = stringResource(R.string.user_screen_greeting) + ", $userName!",
+            text = stringResource(R.string.user_screen_greeting, userName),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Your orders",
+            text = stringResource(R.string.user_screen_orders),
             fontSize = 20.sp,
             color = Color.Gray
         )
@@ -282,17 +282,17 @@ fun ProductOrderItem(productOrder: ProductOrder) {
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = "Quantity: ${productOrder.quantity}",
+                    text = stringResource(R.string.quantity, productOrder.quantity),
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
                 Text(
-                    text = "Price per item: ${productOrder.product.price}",
+                    text = stringResource(R.string.price_per_item, productOrder.product.price),
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
                 Text(
-                    text = "Total Price: ${productOrder.totalPrice}",
+                    text = stringResource(R.string.total_price, productOrder.totalPrice),
                     fontSize = 14.sp,
                     color = Color.Gray
                 )

@@ -14,6 +14,7 @@ import pl.edu.agh.presentation.ui.common.OrderListScreen
 import pl.edu.agh.presentation.ui.common.UnexpectedErrorScreen
 import pl.edu.agh.presentation.viewmodel.OrderDetailsViewModel
 import pl.edu.agh.presentation.viewmodel.OrderSetDeliveredViewModel
+import pl.edu.agh.presentation.viewmodel.OrderSetExpectedDeliveryViewModel
 import pl.edu.agh.presentation.viewmodel.OrdersListViewModel
 import pl.edu.agh.presentation.viewmodel.UserViewModel
 
@@ -38,14 +39,41 @@ fun CourierOrderListScreen(
 }
 
 @Composable
-fun CourierOrderDetailsScreen(navController: NavHostController, orderDetailsViewModel: OrderDetailsViewModel) {
+fun CourierOrderDetailsScreen(
+    navController: NavHostController,
+    orderDetailsViewModel: OrderDetailsViewModel
+) {
+    val orderDetailsState by orderDetailsViewModel.orderDetailsState.collectAsState()
+    when (orderDetailsState) {
+        is OrderDetailsViewModel.OrderDetailsState.Success -> {
+            val order =
+                (orderDetailsState as? OrderDetailsViewModel.OrderDetailsState.Success)?.order
+            OrderDetailScreen(order!!) {
+                CourierOrderDetailsActionButtons(navController, OrderSetDeliveredViewModel(), order)
+            }
+        }
+
+        is OrderDetailsViewModel.OrderDetailsState.Error -> {
+            UnexpectedErrorScreen()
+        }
+
+        is OrderDetailsViewModel.OrderDetailsState.Empty -> {
+            CenteredCircularProgressIndicator()
+        }
+    }
+}
+
+@Composable
+fun CourierOrderSetExpectedDeliveryScreen(
+    navController: NavHostController,
+    orderDetailsViewModel: OrderDetailsViewModel,
+    orderSetExpectedDeliveryViewModel: OrderSetExpectedDeliveryViewModel
+) {
     val orderDetailsState by orderDetailsViewModel.orderDetailsState.collectAsState()
     when (orderDetailsState) {
         is OrderDetailsViewModel.OrderDetailsState.Success -> {
             val order = (orderDetailsState as? OrderDetailsViewModel.OrderDetailsState.Success)?.order
-            OrderDetailScreen(order!!) {
-                CourierOrderDetailsActionButtons(navController, OrderSetDeliveredViewModel(), order)
-            }
+            OrderSetExpectedDelivery(navController, order!!, orderSetExpectedDeliveryViewModel)
         }
 
         is OrderDetailsViewModel.OrderDetailsState.Error -> {
