@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import pl.edu.agh.R
 import pl.edu.agh.data.remote.dto.OrderListViewItemDTO
@@ -55,12 +56,14 @@ fun ClientOrdersScreen(
 }
 
 @Composable
-fun ClientOrderDetailsScreen(orderDetailsViewModel: OrderDetailsViewModel) {
+fun ClientOrderDetailsScreen(orderId: Int) {
+    val orderDetailsViewModel: OrderDetailsViewModel = viewModel(
+        factory = OrderDetailsViewModel.provideFactory(orderId)
+    )
     val orderDetailsState by orderDetailsViewModel.orderDetailsState.collectAsState()
     when (orderDetailsState) {
         is OrderDetailsViewModel.OrderDetailsState.Success -> {
-            val order =
-                (orderDetailsState as? OrderDetailsViewModel.OrderDetailsState.Success)?.order
+            val order = (orderDetailsState as? OrderDetailsViewModel.OrderDetailsState.Success)?.order
             OrderDetailScreen(order!!, actionButtons = {})
         }
 
@@ -77,8 +80,8 @@ fun ClientOrderDetailsScreen(orderDetailsViewModel: OrderDetailsViewModel) {
 @Composable
 fun ClientNewOrderScreen(
     navController: NavController, productListViewModel: ProductListViewModel,
-    orderCreateViewModel: OrderCreateViewModel,
-    ordersListViewModel: OrdersListViewModel
+    ordersListViewModel: OrdersListViewModel,
+    orderCreateViewModel: OrderCreateViewModel = viewModel()
 ) {
     val orderCreateState by orderCreateViewModel.orderCreationState.collectAsState()
     val productListState by productListViewModel.productsListState.collectAsState()

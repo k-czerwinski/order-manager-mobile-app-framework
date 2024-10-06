@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import pl.edu.agh.R
 import pl.edu.agh.model.Order
@@ -45,65 +46,69 @@ import pl.edu.agh.presentation.viewmodel.OrderSetDeliveredViewModel
 import pl.edu.agh.presentation.viewmodel.OrderSetDeliveredViewModel.OrderDeliveredState
 import pl.edu.agh.presentation.viewmodel.OrderSetExpectedDeliveryViewModel
 import pl.edu.agh.presentation.viewmodel.OrderSetExpectedDeliveryViewModel.OrderExpectedDeliveryState
+import pl.edu.agh.presentation.viewmodel.OrdersListViewModel
 import java.time.LocalDate
 import java.util.Calendar
 
 @Composable
 fun CourierOrderDetailsActionButtons(
     navController: NavHostController,
-    orderSetDeliveredViewModel: OrderSetDeliveredViewModel,
-    order: Order
+    order: Order,
+    ordersListViewModel: OrdersListViewModel,
+    orderSetDeliveredViewModel: OrderSetDeliveredViewModel = viewModel()
 ) {
     var isSetDeliveredDialogVisible by remember { mutableStateOf(false) }
     var isDeliveredConfirmedDialogVisible by remember { mutableStateOf(false) }
     val orderedDeliveredState by orderSetDeliveredViewModel.orderDeliveredState.collectAsState()
 
-
-    if (order.status == OrderStatus.IN_DELIVERY) {
-        Button(
-            onClick = { isSetDeliveredDialogVisible = true },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = stringResource(R.string.courier_set_delivered_button))
+    Column {
+        if (order.status == OrderStatus.IN_DELIVERY) {
+            Button(
+                onClick = { isSetDeliveredDialogVisible = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 2.dp)
+            ) {
+                Text(text = stringResource(R.string.courier_set_delivered_button))
+            }
         }
-    }
 
-    if (isSetDeliveredDialogVisible) {
-        OrderMarkAsDeliveredAlert(onConfirmButton = {
-            isDeliveredConfirmedDialogVisible = true
-            isSetDeliveredDialogVisible = false
-            orderSetDeliveredViewModel.setOrderDelivered(order)
-        }, onDismissButton = { isSetDeliveredDialogVisible = false })
-    }
-    if (isDeliveredConfirmedDialogVisible) {
-        when (orderedDeliveredState) {
-            is OrderDeliveredState.Success -> OrderSuccessfullyMarkedAsDeliveredDialog(
-                onDismissButton = {
-                    isDeliveredConfirmedDialogVisible = false
-                    CourierNavigation.navigateToOrderDetailsRoute(navController, order.id)
-                }
-            )
-
-            is OrderDeliveredState.Loading -> CenteredCircularProgressIndicator()
-            is OrderDeliveredState.Error, OrderDeliveredState.Initial -> OrderCouldNotBeMarkedAsDelivered(
-                onDismissButton = {
-                    isDeliveredConfirmedDialogVisible = false
-                    orderSetDeliveredViewModel.resetOrderDeliveredState()
-                })
+        if (isSetDeliveredDialogVisible) {
+            OrderMarkAsDeliveredAlert(onConfirmButton = {
+                isDeliveredConfirmedDialogVisible = true
+                isSetDeliveredDialogVisible = false
+                orderSetDeliveredViewModel.setOrderDelivered(order)
+            }, onDismissButton = { isSetDeliveredDialogVisible = false })
         }
-    }
-    if (order.status != OrderStatus.COMPLETED) {
-        Button(
-            onClick = {
-                CourierNavigation.navigateToOrderExpectedDeliveryRoute(navController, order.id)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = stringResource(R.string.courier_update_expected_delivery_button))
+        if (isDeliveredConfirmedDialogVisible) {
+            when (orderedDeliveredState) {
+                is OrderDeliveredState.Success -> OrderSuccessfullyMarkedAsDeliveredDialog(
+                    onDismissButton = {
+                        isDeliveredConfirmedDialogVisible = false
+                        ordersListViewModel.refreshOrders()
+                        CourierNavigation.navigateToOrderDetailsRoute(navController, order.id)
+                    }
+                )
+
+                is OrderDeliveredState.Loading -> CenteredCircularProgressIndicator()
+                is OrderDeliveredState.Error, OrderDeliveredState.Initial -> OrderCouldNotBeMarkedAsDelivered(
+                    onDismissButton = {
+                        isDeliveredConfirmedDialogVisible = false
+                        orderSetDeliveredViewModel.resetOrderDeliveredState()
+                    })
+            }
+        }
+        if (order.status != OrderStatus.COMPLETED) {
+            Button(
+                onClick = {
+                    CourierNavigation.navigateToOrderExpectedDeliveryRoute(navController, order.id)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 2.dp)
+            ) {
+                Text(text = stringResource(R.string.courier_update_expected_delivery_button))
+            }
         }
     }
 }
@@ -250,6 +255,7 @@ fun OrderSetExpectedDelivery(
                         CourierNavigation.navigateToOrderDetailsRoute(navController, order.id)
                     })
                 }
+
                 is OrderExpectedDeliveryState.Success -> {
                     OrderExpectedDeliverySetSuccessfullyDialog {
                         CourierNavigation.navigateToOrderDetailsRoute(navController, order.id)

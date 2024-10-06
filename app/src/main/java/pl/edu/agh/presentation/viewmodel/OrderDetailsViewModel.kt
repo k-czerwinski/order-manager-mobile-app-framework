@@ -2,6 +2,7 @@ package pl.edu.agh.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +29,17 @@ class OrderDetailsViewModel(private val orderId: Int) : ViewModel() {
             } catch (e: Exception) {
                 Log.d("OrdersViewModel", "Error fetching order details, order id: ${orderId}, message: ${e.message}")
                 _orderDetailsState.value = OrderDetailsState.Error("Error fetching orders: ${e.message}")
+            }
+        }
+    }
+
+    companion object {
+        fun provideFactory(id: Int): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                if (modelClass.isAssignableFrom(OrderDetailsViewModel::class.java)) {
+                    return OrderDetailsViewModel(id) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
             }
         }
     }

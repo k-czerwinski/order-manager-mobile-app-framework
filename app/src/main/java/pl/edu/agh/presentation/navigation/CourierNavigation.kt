@@ -13,8 +13,6 @@ import pl.edu.agh.presentation.ui.courier.CourierOrderListScreen
 import pl.edu.agh.presentation.ui.courier.CourierOrderSetExpectedDeliveryScreen
 import pl.edu.agh.presentation.ui.courier.LoggedInCourierLayout
 import pl.edu.agh.presentation.viewmodel.CompanyViewModel
-import pl.edu.agh.presentation.viewmodel.OrderDetailsViewModel
-import pl.edu.agh.presentation.viewmodel.OrderSetExpectedDeliveryViewModel
 import pl.edu.agh.presentation.viewmodel.OrdersListViewModel
 import pl.edu.agh.presentation.viewmodel.UserViewModel
 
@@ -62,29 +60,24 @@ fun NavGraphBuilder.courierOrdersList(navController: NavHostController) {
         val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
         val userViewModel = it.sharedViewModel<UserViewModel>(navController)
         LoggedInCourierLayout(navController, companyViewModel) {
-            CourierOrderListScreen(navController, ordersListViewModel, userViewModel)
+            CourierOrderListScreen(navController, userViewModel, ordersListViewModel)
         }
     }
 
     composable(CourierNavigation.OrderDetails.route) {
         val orderId = it.arguments?.getString("orderId")?.toInt()
         val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
-        val orderDetailsViewModel = OrderDetailsViewModel(orderId!!)
+        val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
         LoggedInCourierLayout(navController = navController, companyViewModel = companyViewModel) {
-            CourierOrderDetailsScreen(navController, orderDetailsViewModel)
+            CourierOrderDetailsScreen(navController, orderId!!, ordersListViewModel)
         }
     }
 
     composable(CourierNavigation.OrderExpectedDeliverySet.route) {
         val orderId = it.arguments?.getString("orderId")?.toInt()
         val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
-        val orderDetailsViewModel = OrderDetailsViewModel(orderId!!)
         LoggedInCourierLayout(navController = navController, companyViewModel = companyViewModel) {
-            CourierOrderSetExpectedDeliveryScreen(
-                navController,
-                orderDetailsViewModel,
-                OrderSetExpectedDeliveryViewModel()
-            )
+            CourierOrderSetExpectedDeliveryScreen(navController, orderId!!)
         }
     }
 

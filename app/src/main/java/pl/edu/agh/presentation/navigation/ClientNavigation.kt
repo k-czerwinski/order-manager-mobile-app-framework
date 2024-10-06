@@ -1,6 +1,5 @@
 package pl.edu.agh.presentation.navigation
 
-import OrderCreateViewModel
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -15,7 +14,6 @@ import pl.edu.agh.presentation.ui.client.LoggedInClientLayout
 import pl.edu.agh.presentation.ui.client.ClientOrdersScreen
 import pl.edu.agh.presentation.ui.common.UnexpectedErrorScreen
 import pl.edu.agh.presentation.viewmodel.CompanyViewModel
-import pl.edu.agh.presentation.viewmodel.OrderDetailsViewModel
 import pl.edu.agh.presentation.viewmodel.OrdersListViewModel
 import pl.edu.agh.presentation.viewmodel.ProductListViewModel
 import pl.edu.agh.presentation.viewmodel.UserViewModel
@@ -50,25 +48,19 @@ fun NavGraphBuilder.clientGraph(navController: NavHostController) {
         composable(ClientNavigation.OrderDetails.route) {
             val orderId = it.arguments?.getString("orderId")?.toInt()
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
-            val orderDetailsViewModel = OrderDetailsViewModel(orderId!!)
             LoggedInClientLayout(navController = navController, companyViewModel = companyViewModel) {
-                ClientOrderDetailsScreen(orderDetailsViewModel)
+                ClientOrderDetailsScreen(orderId!!)
             }
         }
         composable(ClientNavigation.CreateOrder.route) {
             val productListViewModel = it.sharedViewModel<ProductListViewModel>(navController)
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
-            val orderCreateViewModel = it.sharedViewModel<OrderCreateViewModel>(navController)
             val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
-
-            orderCreateViewModel.resetOrderCreationState()
             LoggedInClientLayout(navController, companyViewModel) {
                 ClientNewOrderScreen(
                     navController,
                     productListViewModel,
-                    orderCreateViewModel,
-                    ordersListViewModel
-                )
+                    ordersListViewModel)
             }
         }
         composable(ClientNavigation.Logout.route) {
