@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import pl.edu.agh.R
@@ -21,7 +20,6 @@ import pl.edu.agh.presentation.navigation.ClientNavigation
 import pl.edu.agh.presentation.ui.common.CenteredCircularProgressIndicator
 import pl.edu.agh.presentation.ui.common.OrderDetailScreen
 import pl.edu.agh.presentation.ui.common.OrderListScreen
-import pl.edu.agh.presentation.ui.common.UnexpectedErrorScreen
 import pl.edu.agh.presentation.viewmodel.OrderDetailsViewModel
 import pl.edu.agh.presentation.viewmodel.OrdersListViewModel
 import pl.edu.agh.presentation.viewmodel.ProductListViewModel
@@ -56,7 +54,7 @@ fun ClientOrdersScreen(
 }
 
 @Composable
-fun ClientOrderDetailsScreen(orderId: Int) {
+fun ClientOrderDetailsScreen(navController: NavController, orderId: Int) {
     val orderDetailsViewModel: OrderDetailsViewModel = viewModel(
         factory = OrderDetailsViewModel.provideFactory(orderId)
     )
@@ -68,7 +66,7 @@ fun ClientOrderDetailsScreen(orderId: Int) {
         }
 
         is OrderDetailsViewModel.OrderDetailsState.Error -> {
-            UnexpectedErrorScreen()
+            navController.navigate(ClientNavigation.UnexpectedError.route)
         }
 
         is OrderDetailsViewModel.OrderDetailsState.Empty -> {
@@ -114,13 +112,13 @@ fun ClientNewOrderScreen(
                 }
 
                 is OrderCreateViewModel.OrderCreationState.Error -> {
-                    Dialog(onDismissRequest = {}, content = { Text("Error") })
+                    navController.navigate(ClientNavigation.UnexpectedError.route)
                 }
             }
         }
 
         is ProductListViewModel.ProductListState.Error -> {
-            UnexpectedErrorScreen()
+            navController.navigate(ClientNavigation.UnexpectedError.route)
         }
 
         is ProductListViewModel.ProductListState.Empty -> {

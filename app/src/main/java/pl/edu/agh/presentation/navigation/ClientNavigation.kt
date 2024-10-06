@@ -49,7 +49,7 @@ fun NavGraphBuilder.clientGraph(navController: NavHostController) {
             val orderId = it.arguments?.getString("orderId")?.toInt()
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
             LoggedInClientLayout(navController = navController, companyViewModel = companyViewModel) {
-                ClientOrderDetailsScreen(orderId!!)
+                ClientOrderDetailsScreen(navController, orderId!!)
             }
         }
         composable(ClientNavigation.CreateOrder.route) {

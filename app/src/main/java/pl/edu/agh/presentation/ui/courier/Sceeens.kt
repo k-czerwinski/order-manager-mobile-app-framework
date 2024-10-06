@@ -12,7 +12,6 @@ import pl.edu.agh.presentation.navigation.CourierNavigation
 import pl.edu.agh.presentation.ui.common.CenteredCircularProgressIndicator
 import pl.edu.agh.presentation.ui.common.OrderDetailScreen
 import pl.edu.agh.presentation.ui.common.OrderListScreen
-import pl.edu.agh.presentation.ui.common.UnexpectedErrorScreen
 import pl.edu.agh.presentation.viewmodel.OrderDetailsViewModel
 import pl.edu.agh.presentation.viewmodel.OrderSetExpectedDeliveryViewModel
 import pl.edu.agh.presentation.viewmodel.OrdersListViewModel
@@ -57,7 +56,8 @@ fun CourierOrderDetailsScreen(
         }
 
         is OrderDetailsViewModel.OrderDetailsState.Error -> {
-            UnexpectedErrorScreen()
+            navController.navigate(CourierNavigation.UnexpectedError.route)
+
         }
 
         is OrderDetailsViewModel.OrderDetailsState.Empty -> {
@@ -83,7 +83,8 @@ fun CourierOrderSetExpectedDeliveryScreen(
         }
 
         is OrderDetailsViewModel.OrderDetailsState.Error -> {
-            UnexpectedErrorScreen()
+            navController.navigate(CourierNavigation.UnexpectedError.route)
+
         }
 
         is OrderDetailsViewModel.OrderDetailsState.Empty -> {

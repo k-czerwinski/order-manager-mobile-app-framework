@@ -8,6 +8,7 @@ import androidx.navigation.compose.navigation
 import pl.edu.agh.data.remote.ApiClient
 import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.presentation.sharedViewModel
+import pl.edu.agh.presentation.ui.common.UnexpectedErrorScreen
 import pl.edu.agh.presentation.ui.courier.CourierOrderDetailsScreen
 import pl.edu.agh.presentation.ui.courier.CourierOrderListScreen
 import pl.edu.agh.presentation.ui.courier.CourierOrderSetExpectedDeliveryScreen
@@ -20,6 +21,7 @@ enum class CourierNavigation(route: String) {
     OrdersList("orders_list"),
     OrderDetails("order_details/{orderId}"),
     OrderExpectedDeliverySet("order_expected_delivery/{orderId}"),
+    UnexpectedError("unexpected_error"),
     Logout("logout");
 
     val route: String = AppNavigation.Courier.route + "/" + route
@@ -78,6 +80,13 @@ fun NavGraphBuilder.courierOrdersList(navController: NavHostController) {
         val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
         LoggedInCourierLayout(navController = navController, companyViewModel = companyViewModel) {
             CourierOrderSetExpectedDeliveryScreen(navController, orderId!!)
+        }
+    }
+
+    composable(CourierNavigation.UnexpectedError.route) {
+        val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+        LoggedInCourierLayout(navController = navController, companyViewModel = companyViewModel) {
+            UnexpectedErrorScreen()
         }
     }
 
