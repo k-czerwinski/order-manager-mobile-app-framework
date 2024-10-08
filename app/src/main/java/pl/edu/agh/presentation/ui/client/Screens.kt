@@ -20,9 +20,16 @@ import pl.edu.agh.presentation.navigation.ClientNavigation
 import pl.edu.agh.presentation.ui.common.CenteredCircularProgressIndicator
 import pl.edu.agh.presentation.ui.common.OrderDetailScreen
 import pl.edu.agh.presentation.ui.common.OrderListScreen
+import pl.edu.agh.presentation.viewmodel.CommonViewModel
+import pl.edu.agh.presentation.viewmodel.OrderDetailsStateError
+import pl.edu.agh.presentation.viewmodel.OrderDetailsStateSuccess
 import pl.edu.agh.presentation.viewmodel.OrderDetailsViewModel
+import pl.edu.agh.presentation.viewmodel.OrdersListStateSuccess
 import pl.edu.agh.presentation.viewmodel.OrdersListViewModel
+import pl.edu.agh.presentation.viewmodel.ProductListStateError
+import pl.edu.agh.presentation.viewmodel.ProductListStateSuccess
 import pl.edu.agh.presentation.viewmodel.ProductListViewModel
+import pl.edu.agh.presentation.viewmodel.UserStateSuccess
 import pl.edu.agh.presentation.viewmodel.UserViewModel
 
 @Composable
@@ -33,9 +40,9 @@ fun ClientOrdersScreen(
 ) {
     val ordersState by ordersListViewModel.ordersListState.collectAsState()
     val orders: List<OrderListViewItemDTO> =
-        (ordersState as? OrdersListViewModel.OrdersListState.Success)?.orderDTOS ?: emptyList()
+        (ordersState as? OrdersListStateSuccess)?.data ?: emptyList()
     val userState by userViewModel.userState.collectAsState()
-    val userName = (userState as? UserViewModel.UserState.Success)?.userDTO?.firstName ?: "User"
+    val userName = (userState as? UserStateSuccess)?.data?.firstName ?: "User"
 
     OrderListScreen(
         userName,
@@ -56,20 +63,21 @@ fun ClientOrdersScreen(
 @Composable
 fun ClientOrderDetailsScreen(navController: NavController, orderId: Int) {
     val orderDetailsViewModel: OrderDetailsViewModel = viewModel(
-        factory = OrderDetailsViewModel.provideFactory(orderId)
+        factory = CommonViewModel.provideFactory {
+            OrderDetailsViewModel(orderId)
+        }
     )
     val orderDetailsState by orderDetailsViewModel.orderDetailsState.collectAsState()
     when (orderDetailsState) {
-        is OrderDetailsViewModel.OrderDetailsState.Success -> {
-            val order = (orderDetailsState as? OrderDetailsViewModel.OrderDetailsState.Success)?.order
+        is OrderDetailsStateSuccess -> {
+            val order = (orderDetailsState as? OrderDetailsStateSuccess)?.data
             OrderDetailScreen(order!!, actionButtons = {})
         }
 
-        is OrderDetailsViewModel.OrderDetailsState.Error -> {
+        is OrderDetailsStateError -> {
             navController.navigate(ClientNavigation.UnexpectedError.route)
         }
-
-        is OrderDetailsViewModel.OrderDetailsState.Empty -> {
+        else -> {
             CenteredCircularProgressIndicator()
         }
     }
@@ -84,9 +92,9 @@ fun ClientNewOrderScreen(
     val orderCreateState by orderCreateViewModel.orderCreationState.collectAsState()
     val productListState by productListViewModel.productsListState.collectAsState()
     when (productListState) {
-        is ProductListViewModel.ProductListState.Success -> {
+        is ProductListStateSuccess -> {
             val products =
-                (productListState as? ProductListViewModel.ProductListState.Success)?.products
+                (productListState as? ProductListStateSuccess)?.data
             CreateNewOrderScreen(products!!, orderCreateViewModel)
             when (orderCreateState) {
                 is OrderCreateViewModel.OrderCreationState.Initial -> {}
@@ -100,7 +108,7 @@ fun ClientNewOrderScreen(
 
                 is OrderCreateViewModel.OrderCreationState.Success -> {
                     OrderConfirmedDialog(backToOrderListView = {
-                        ordersListViewModel.refreshOrders()
+                        ordersListViewModel.loadOrders()
                         navController.navigate(
                             ClientNavigation.OrdersList.route
                         ) {
@@ -117,11 +125,11 @@ fun ClientNewOrderScreen(
             }
         }
 
-        is ProductListViewModel.ProductListState.Error -> {
+        is ProductListStateError -> {
             navController.navigate(ClientNavigation.UnexpectedError.route)
         }
 
-        is ProductListViewModel.ProductListState.Empty -> {
+        else -> {
             CenteredCircularProgressIndicator()
         }
     }

@@ -12,9 +12,14 @@ import pl.edu.agh.presentation.navigation.CourierNavigation
 import pl.edu.agh.presentation.ui.common.CenteredCircularProgressIndicator
 import pl.edu.agh.presentation.ui.common.OrderDetailScreen
 import pl.edu.agh.presentation.ui.common.OrderListScreen
+import pl.edu.agh.presentation.viewmodel.CommonViewModel
+import pl.edu.agh.presentation.viewmodel.OrderDetailsStateError
+import pl.edu.agh.presentation.viewmodel.OrderDetailsStateSuccess
 import pl.edu.agh.presentation.viewmodel.OrderDetailsViewModel
 import pl.edu.agh.presentation.viewmodel.OrderSetExpectedDeliveryViewModel
+import pl.edu.agh.presentation.viewmodel.OrdersListStateSuccess
 import pl.edu.agh.presentation.viewmodel.OrdersListViewModel
+import pl.edu.agh.presentation.viewmodel.UserStateSuccess
 import pl.edu.agh.presentation.viewmodel.UserViewModel
 
 @Composable
@@ -25,9 +30,9 @@ fun CourierOrderListScreen(
 ) {
     val ordersState by ordersListViewModel.ordersListState.collectAsState()
     val orders: List<OrderListViewItemDTO> =
-        (ordersState as? OrdersListViewModel.OrdersListState.Success)?.orderDTOS ?: emptyList()
+        (ordersState as? OrdersListStateSuccess)?.data ?: emptyList()
     val userState by userViewModel.userState.collectAsState()
-    val userName = (userState as? UserViewModel.UserState.Success)?.userDTO?.firstName ?: "User"
+    val userName = (userState as? UserStateSuccess)?.data?.firstName ?: "User"
 
     OrderListScreen(
         userName,
@@ -44,23 +49,25 @@ fun CourierOrderDetailsScreen(
     ordersListViewModel: OrdersListViewModel
 ) {
     val orderDetailsViewModel: OrderDetailsViewModel = viewModel(
-        factory = OrderDetailsViewModel.provideFactory(orderId)
+        factory = CommonViewModel.provideFactory {
+            OrderDetailsViewModel(orderId)
+        }
     )
     val orderDetailsState by orderDetailsViewModel.orderDetailsState.collectAsState()
     when (orderDetailsState) {
-        is OrderDetailsViewModel.OrderDetailsState.Success -> {
-            val order = (orderDetailsState as? OrderDetailsViewModel.OrderDetailsState.Success)?.order
+        is OrderDetailsStateSuccess -> {
+            val order = (orderDetailsState as? OrderDetailsStateSuccess)?.data
             OrderDetailScreen(order!!) {
                 CourierOrderDetailsActionButtons(navController, order, ordersListViewModel)
             }
         }
 
-        is OrderDetailsViewModel.OrderDetailsState.Error -> {
+        is OrderDetailsStateError -> {
             navController.navigate(CourierNavigation.UnexpectedError.route)
 
         }
 
-        is OrderDetailsViewModel.OrderDetailsState.Empty -> {
+        else -> {
             CenteredCircularProgressIndicator()
         }
     }
@@ -73,21 +80,23 @@ fun CourierOrderSetExpectedDeliveryScreen(
     orderSetExpectedDeliveryViewModel: OrderSetExpectedDeliveryViewModel = viewModel()
 ) {
     val orderDetailsViewModel: OrderDetailsViewModel = viewModel(
-        factory = OrderDetailsViewModel.provideFactory(orderId)
+        factory = CommonViewModel.provideFactory {
+            OrderDetailsViewModel(orderId)
+        }
     )
     val orderDetailsState by orderDetailsViewModel.orderDetailsState.collectAsState()
     when (orderDetailsState) {
-        is OrderDetailsViewModel.OrderDetailsState.Success -> {
-            val order = (orderDetailsState as? OrderDetailsViewModel.OrderDetailsState.Success)?.order
+        is OrderDetailsStateSuccess -> {
+            val order = (orderDetailsState as? OrderDetailsStateSuccess)?.data
             OrderSetExpectedDelivery(navController, order!!, orderSetExpectedDeliveryViewModel)
         }
 
-        is OrderDetailsViewModel.OrderDetailsState.Error -> {
+        is OrderDetailsStateError -> {
             navController.navigate(CourierNavigation.UnexpectedError.route)
 
         }
 
-        is OrderDetailsViewModel.OrderDetailsState.Empty -> {
+        else -> {
             CenteredCircularProgressIndicator()
         }
     }

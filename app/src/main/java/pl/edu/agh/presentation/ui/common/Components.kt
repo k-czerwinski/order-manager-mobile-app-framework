@@ -48,9 +48,9 @@ fun AppScreen(topBar: @Composable () -> Unit, content: @Composable () -> Unit) {
 
 @Composable
 fun AppTopBar(
+    navController: NavController,
     companyName: String,
-    userMenu: @Composable () -> Unit,
-    navigationIcon: @Composable () -> Unit
+    userMenu: @Composable () -> Unit
 ) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -64,7 +64,7 @@ fun AppTopBar(
                 overflow = TextOverflow.Ellipsis
             )
         },
-        navigationIcon = navigationIcon,
+        navigationIcon = { BackNavigationIcon(navController) },
         actions = {
             userMenu()
         },

@@ -17,9 +17,9 @@ import androidx.navigation.NavController
 import pl.edu.agh.R
 import pl.edu.agh.presentation.navigation.ClientNavigation
 import pl.edu.agh.presentation.ui.common.AppMenu
-import pl.edu.agh.presentation.ui.common.BackNavigationIcon
 import pl.edu.agh.presentation.ui.common.AppScreen
 import pl.edu.agh.presentation.ui.common.AppTopBar
+import pl.edu.agh.presentation.viewmodel.CompanySuccessState
 import pl.edu.agh.presentation.viewmodel.CompanyViewModel
 
 @Composable
@@ -27,11 +27,10 @@ fun ClientTopBar(
     navController: NavController, companyViewModel: CompanyViewModel
 ) {
     var showMenu by remember { mutableStateOf(false) }
-    val companyState = companyViewModel.companyState.collectAsState()
-    val companyName = companyState.value.let {
-        if (it is CompanyViewModel.CompanyState.Success) it.company.name else ""
-    }
+    val companyState by companyViewModel.companyState.collectAsState()
+    val companyName = (companyState as? CompanySuccessState)?.data?.name ?: ""
     AppTopBar(
+        navController = navController,
         companyName = "$companyName - ${stringResource(R.string.app_name)}",
         userMenu = {
             IconButton(onClick = { showMenu = !showMenu }) {
@@ -44,9 +43,6 @@ fun ClientTopBar(
                 navController = navController,
                 showMenu = showMenu,
                 onDismissRequest = { showMenu = false })
-        },
-        navigationIcon = {
-            BackNavigationIcon(navController)
         }
     )
 }

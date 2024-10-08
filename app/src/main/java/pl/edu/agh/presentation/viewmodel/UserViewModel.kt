@@ -1,40 +1,33 @@
 package pl.edu.agh.presentation.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import pl.edu.agh.data.remote.ApiClient
 import pl.edu.agh.data.remote.dto.UserDTO
 import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
 
-class UserViewModel : ViewModel() {
-    private val _userState = MutableStateFlow<UserState>(UserState.Empty)
-    val userState: StateFlow<UserState> = _userState
+typealias UserStateSuccess = CommonViewModel.State.Success<UserDTO>
+
+class UserViewModel : CommonViewModel<UserDTO>() {
+    val userState: StateFlow<State<UserDTO>> = state
 
     init {
-        fetchOrders()
-    }
-
-    private fun fetchOrders() {
         viewModelScope.launch {
-            try {
-                val companyId = EncryptedSharedPreferencesManager.getCompanyId()
-                val userRole = EncryptedSharedPreferencesManager.getUserRole()
-                val orders = ApiClient.getCurrentUser(companyId, userRole)
-                _userState.value = UserState.Success(orders)
-            } catch (e: Exception) {
-                Log.d("UserViewModel", "Error fetching orders: ${e.message}")
-                _userState.value = UserState.Error("Error fetching orders: ${e.message}")
-            }
+            fetchData()
         }
     }
 
-    sealed class UserState {
-        data object Empty : UserState()
-        data class Success(val userDTO: UserDTO) : UserState()
-        data class Error(val message: String) : UserState()
+    override suspend fun fetchData() {
+        try {
+            val companyId = EncryptedSharedPreferencesManager.getCompanyId()
+            val userRole = EncryptedSharedPreferencesManager.getUserRole()
+            val users = ApiClient.getCurrentUser(companyId, userRole)
+            state.value = State.Success(users)
+        } catch (e: Exception) {
+            Log.d("UserViewModel", "Error fetching orders: ${e.message}")
+            state.value = State.Error("Error fetching orders: ${e.message}")
+        }
     }
 }

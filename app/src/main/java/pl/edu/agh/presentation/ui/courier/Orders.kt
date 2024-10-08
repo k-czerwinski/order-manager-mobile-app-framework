@@ -85,7 +85,7 @@ fun CourierOrderDetailsActionButtons(
                 is OrderDeliveredState.Success -> OrderSuccessfullyMarkedAsDeliveredDialog(
                     onDismissButton = {
                         isDeliveredConfirmedDialogVisible = false
-                        ordersListViewModel.refreshOrders()
+                        ordersListViewModel.loadOrders()
                         CourierNavigation.navigateToOrderDetailsRoute(navController, order.id)
                     }
                 )
