@@ -1,7 +1,12 @@
 package pl.edu.agh.model
 
-enum class UserRole(val urlName: String) {
-    CLIENT("client"),
-    COURIER("courier"),
-    ADMIN("admin") // not allowed in this app
+import pl.edu.agh.presentation.navigation.CustomNavigation
+
+enum class UserRole(
+    val urlName: String,
+    val navigation: CustomNavigation
+) {
+    CLIENT("client", CustomNavigation.Client),
+    COURIER("courier", CustomNavigation.Courier),
+    ADMIN("admin", CustomNavigation.Admin)
 }

@@ -12,26 +12,46 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pl.edu.agh.R
 import pl.edu.agh.model.Order
 import pl.edu.agh.model.OrderListViewItem
 import pl.edu.agh.model.OrderStatus
+import pl.edu.agh.model.Product
 import pl.edu.agh.model.ProductOrder
+import pl.edu.agh.presentation.ui.client.onProductQuantityChange
+import java.math.BigDecimal
 
 @Composable
 fun OrderStatusWithDescription(status: OrderStatus) {
@@ -297,6 +317,103 @@ fun ProductOrderItem(productOrder: ProductOrder) {
                     color = Color.Gray
                 )
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ProductItemPreview() {
+    var quantity by remember { mutableIntStateOf(0) }
+    ProductItem(
+        product = Product(1, "Test", BigDecimal(1), "test"),
+        onQuantityChange = { quantity = it })
+    Text(text = "Quantity: $quantity")
+}
+
+@Composable
+fun ProductItem(product: Product, onQuantityChange: (Int) -> Unit, quantity: Int = 0) {
+    var currentQuantity by remember { mutableIntStateOf(quantity) }
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = product.name,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = stringResource(R.string.product_price, product.price),
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .fillMaxWidth(0.7f),
+                    maxLines = 3
+                )
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = { if (currentQuantity > 0) currentQuantity-- }) {
+                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Decrease quantity")
+                }
+                TextField(
+                    value = currentQuantity.toString(),
+                    onValueChange = { newValue ->
+                        newValue.toIntOrNull()?.let { newQuantity ->
+                            if (newQuantity >= 0) {
+                                currentQuantity = newQuantity
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .width(60.dp)
+                        .padding(0.dp),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                    textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+                )
+                IconButton(onClick = { currentQuantity++ }) {
+                    Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Increase quantity")
+                }
+            }
+        }
+    }
+    onQuantityChange(currentQuantity)
+}
+
+@Composable
+@Preview
+fun ProductListPreview() {
+    val products = listOf(
+        Product(1, "Product 1", BigDecimal(10.0), "Description 1"),
+        Product(2, "Product 2", BigDecimal(20.0), "Description 2"),
+        Product(3, "Product 3", BigDecimal(30.0), "Description 3")
+    )
+    val selectedProducts = remember { mutableStateMapOf<Product, Int>() }
+    ProductList(products, selectedProducts)
+}
+
+@Composable
+fun ProductList(products: List<Product>, selectedProducts: MutableMap<Product, Int>) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(0.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(products) { product ->
+            ProductItem(product, onQuantityChange = {
+                onProductQuantityChange(selectedProducts, product, it)
+            })
         }
     }
 }

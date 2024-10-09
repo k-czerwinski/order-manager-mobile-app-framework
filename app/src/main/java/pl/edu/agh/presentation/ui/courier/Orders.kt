@@ -1,6 +1,5 @@
 package pl.edu.agh.presentation.ui.courier
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +40,7 @@ import pl.edu.agh.model.Order
 import pl.edu.agh.model.OrderStatus
 import pl.edu.agh.presentation.navigation.CourierNavigation
 import pl.edu.agh.presentation.ui.common.CenteredCircularProgressIndicator
+import pl.edu.agh.presentation.ui.common.DismissButtonDialog
 import pl.edu.agh.presentation.ui.common.OrderSummary
 import pl.edu.agh.presentation.viewmodel.OrderSetDeliveredViewModel
 import pl.edu.agh.presentation.viewmodel.OrderSetDeliveredViewModel.OrderDeliveredState
@@ -146,11 +146,12 @@ fun OrderMarkAsDeliveredAlert(onConfirmButton: () -> Unit, onDismissButton: () -
 
 @Composable
 fun OrderSuccessfullyMarkedAsDeliveredDialog(onDismissButton: () -> Unit) {
-    OrderDetailsDialog(
+    DismissButtonDialog(
         R.drawable.ic_order_completed,
         stringResource(R.string.order_delivered_dialog_title),
         stringResource(R.string.order_delivered_dialog_description),
-        onDismissButton
+        onDismissButton,
+        stringResource(R.string.order_dialog_to_order_details_button)
     )
 }
 
@@ -158,63 +159,34 @@ fun OrderSuccessfullyMarkedAsDeliveredDialog(onDismissButton: () -> Unit) {
 fun OrderCouldNotBeMarkedAsDelivered(
     onDismissButton: () -> Unit
 ) {
-    OrderDetailsDialog(
+    DismissButtonDialog(
         R.drawable.error,
         stringResource(R.string.order_set_delivered_error_dialog_title),
         stringResource(R.string.order_set_delivered_error_dialog_description),
-        onDismissButton
+        onDismissButton,
+        stringResource(R.string.order_dialog_to_order_details_button)
     )
 }
 
 @Composable
 fun OrderExpectedDeliverySetSuccessfullyDialog(onDismissButton: () -> Unit) {
-    OrderDetailsDialog(
+    DismissButtonDialog(
         R.drawable.ic_order_completed,
         stringResource(R.string.order_expected_delivery_set_successfully_dialog_title),
         stringResource(R.string.order_expected_delivery_set_successfully_dialog_description),
-        onDismissButton
+        onDismissButton,
+        stringResource(R.string.order_dialog_to_order_details_button)
     )
 }
 
 @Composable
 fun OrderExpectedDeliverySetErrorDialog(onDismissButton: () -> Unit) {
-    OrderDetailsDialog(
+    DismissButtonDialog(
         R.drawable.error,
         stringResource(R.string.order_expected_delivery_set_error_dialog_title),
         stringResource(R.string.order_expected_delivery_set_error_dialog_description),
-        onDismissButton
-    )
-}
-
-@Composable
-fun OrderDetailsDialog(
-    @DrawableRes icon: Int,
-    title: String,
-    description: String,
-    onDismissButton: () -> Unit
-) {
-    AlertDialog(
-        icon = {
-            Icon(
-                painterResource(icon),
-                contentDescription = title
-            )
-        },
-        title = {
-            Text(title)
-        },
-        text = {
-            Text(description)
-        },
-        onDismissRequest = onDismissButton,
-        confirmButton = {},
-        dismissButton = {
-            TextButton(
-                onClick = onDismissButton
-            ) {
-                Text(stringResource(R.string.order_dialog_to_order_details_button))
-            }
-        }
+        onDismissButton,
+        stringResource(R.string.order_dialog_to_order_details_button)
     )
 }
 

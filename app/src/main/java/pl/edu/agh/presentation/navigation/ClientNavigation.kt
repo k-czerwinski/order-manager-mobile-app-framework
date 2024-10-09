@@ -25,17 +25,17 @@ enum class ClientNavigation(route: String) {
     Logout("logout"),
     UnexpectedError("unexpected_error");
 
-    val route: String = AppNavigation.Client.route + "/" + route
+    val route: String = CustomNavigation.Client.route + "/" + route
 
     companion object {
         fun createOrderDetailsRoute(orderId: Int) =
-            "${AppNavigation.Client.route}/order_details/$orderId"
+            "${CustomNavigation.Client.route}/order_details/$orderId"
     }
 }
 
 fun NavGraphBuilder.clientGraph(navController: NavHostController) {
     navigation(
-        startDestination = ClientNavigation.OrdersList.route, route = AppNavigation.Client.route
+        startDestination = ClientNavigation.OrdersList.route, route = CustomNavigation.Client.route
     ) {
         composable(ClientNavigation.OrdersList.route) {
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
@@ -67,8 +67,8 @@ fun NavGraphBuilder.clientGraph(navController: NavHostController) {
             LaunchedEffect(Unit) {
                 ApiClient.logout(EncryptedSharedPreferencesManager.getRefreshToken())
                 EncryptedSharedPreferencesManager.clearUserData()
-                navController.navigate(AppNavigation.Auth.route) {
-                    popUpTo(AppNavigation.Client.route) {
+                navController.navigate(AuthNavigation.BASE_ROUTE) {
+                    popUpTo(CustomNavigation.Client.route) {
                         inclusive = true
                     }
                 }

@@ -24,11 +24,11 @@ enum class CourierNavigation(route: String) {
     UnexpectedError("unexpected_error"),
     Logout("logout");
 
-    val route: String = AppNavigation.Courier.route + "/" + route
+    val route: String = CustomNavigation.Courier.route + "/" + route
 
     companion object {
         fun createOrderDetailsRoute(orderId: Int) =
-            "${AppNavigation.Courier.route}/order_details/$orderId"
+            "${CustomNavigation.Courier.route}/order_details/$orderId"
 
         fun navigateToOrderDetailsRoute(navController: NavHostController, orderId: Int) {
             navController.navigate(createOrderDetailsRoute(orderId)) {
@@ -39,7 +39,7 @@ enum class CourierNavigation(route: String) {
         }
 
         fun navigateToOrderExpectedDeliveryRoute(navController: NavHostController, orderId: Int) {
-            navController.navigate("${AppNavigation.Courier.route}/order_expected_delivery/$orderId") {
+            navController.navigate("${CustomNavigation.Courier.route}/order_expected_delivery/$orderId") {
                 popUpTo(navController.currentBackStackEntry?.destination?.route ?: "") {
                     inclusive = true
                 }
@@ -50,53 +50,58 @@ enum class CourierNavigation(route: String) {
 
 fun NavGraphBuilder.courierGraph(navController: NavHostController) {
     navigation(
-        startDestination = CourierNavigation.OrdersList.route, route = AppNavigation.Courier.route
+        startDestination = CourierNavigation.OrdersList.route, route = CustomNavigation.Courier.route
     ) {
-        courierOrdersList(navController)
-    }
-}
-
-fun NavGraphBuilder.courierOrdersList(navController: NavHostController) {
-    composable(CourierNavigation.OrdersList.route) {
-        val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
-        val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
-        val userViewModel = it.sharedViewModel<UserViewModel>(navController)
-        LoggedInCourierLayout(navController, companyViewModel) {
-            CourierOrderListScreen(navController, userViewModel, ordersListViewModel)
+        composable(CourierNavigation.OrdersList.route) {
+            val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
+            val userViewModel = it.sharedViewModel<UserViewModel>(navController)
+            LoggedInCourierLayout(navController, companyViewModel) {
+                CourierOrderListScreen(navController, userViewModel, ordersListViewModel)
+            }
         }
-    }
 
-    composable(CourierNavigation.OrderDetails.route) {
-        val orderId = it.arguments?.getString("orderId")?.toInt()
-        val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
-        val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
-        LoggedInCourierLayout(navController = navController, companyViewModel = companyViewModel) {
-            CourierOrderDetailsScreen(navController, orderId!!, ordersListViewModel)
+        composable(CourierNavigation.OrderDetails.route) {
+            val orderId = it.arguments?.getString("orderId")?.toInt()
+            val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
+            LoggedInCourierLayout(
+                navController = navController,
+                companyViewModel = companyViewModel
+            ) {
+                CourierOrderDetailsScreen(navController, orderId!!, ordersListViewModel)
+            }
         }
-    }
 
-    composable(CourierNavigation.OrderExpectedDeliverySet.route) {
-        val orderId = it.arguments?.getString("orderId")?.toInt()
-        val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
-        LoggedInCourierLayout(navController = navController, companyViewModel = companyViewModel) {
-            CourierOrderSetExpectedDeliveryScreen(navController, orderId!!)
+        composable(CourierNavigation.OrderExpectedDeliverySet.route) {
+            val orderId = it.arguments?.getString("orderId")?.toInt()
+            val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            LoggedInCourierLayout(
+                navController = navController,
+                companyViewModel = companyViewModel
+            ) {
+                CourierOrderSetExpectedDeliveryScreen(navController, orderId!!)
+            }
         }
-    }
 
-    composable(CourierNavigation.UnexpectedError.route) {
-        val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
-        LoggedInCourierLayout(navController = navController, companyViewModel = companyViewModel) {
-            UnexpectedErrorScreen()
+        composable(CourierNavigation.UnexpectedError.route) {
+            val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            LoggedInCourierLayout(
+                navController = navController,
+                companyViewModel = companyViewModel
+            ) {
+                UnexpectedErrorScreen()
+            }
         }
-    }
 
-    composable(CourierNavigation.Logout.route) {
-        LaunchedEffect(Unit) {
-            ApiClient.logout(EncryptedSharedPreferencesManager.getRefreshToken())
-            EncryptedSharedPreferencesManager.clearUserData()
-            navController.navigate(AppNavigation.Auth.route) {
-                popUpTo(AppNavigation.Courier.route) {
-                    inclusive = true
+        composable(CourierNavigation.Logout.route) {
+            LaunchedEffect(Unit) {
+                ApiClient.logout(EncryptedSharedPreferencesManager.getRefreshToken())
+                EncryptedSharedPreferencesManager.clearUserData()
+                navController.navigate(AuthNavigation.BASE_ROUTE) {
+                    popUpTo(CustomNavigation.Courier.route) {
+                        inclusive = true
+                    }
                 }
             }
         }
