@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import pl.edu.agh.framework.data.remote.ApiClient
-import pl.edu.agh.framework.data.remote.dto.OrderListViewItemDTO
+import pl.edu.agh.implementation.data.dto.OrderListViewItemDTO
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.presentation.viewmodel.CommonListViewModel
 import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel

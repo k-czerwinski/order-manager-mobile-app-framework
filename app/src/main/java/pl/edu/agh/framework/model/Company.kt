@@ -1,4 +1,4 @@
-package pl.edu.agh.framework.data.remote.dto
+package pl.edu.agh.framework.model
 
 import kotlinx.serialization.Serializable
 

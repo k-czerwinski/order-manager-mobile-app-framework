@@ -6,11 +6,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import pl.edu.agh.framework.data.remote.ApiClient
-import pl.edu.agh.framework.data.remote.dto.OrderCreateDTO
-import pl.edu.agh.framework.data.remote.dto.OrderProductCreateDTO
+import pl.edu.agh.implementation.data.dto.OrderCreateDTO
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.model.Product
 import pl.edu.agh.implementation.data.createOrder
+import pl.edu.agh.implementation.data.dto.OrderProductCreateDTO
 import java.math.BigDecimal
 
 class OrderCreateViewModel : ViewModel() {

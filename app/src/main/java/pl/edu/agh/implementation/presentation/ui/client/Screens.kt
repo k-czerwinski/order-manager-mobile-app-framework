@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import pl.edu.agh.R
-import pl.edu.agh.framework.data.remote.dto.OrderListViewItemDTO
+import pl.edu.agh.implementation.data.dto.OrderListViewItemDTO
 import pl.edu.agh.framework.model.OrderListViewItem
 import pl.edu.agh.framework.presentation.ui.common.CenteredCircularProgressIndicator
 import pl.edu.agh.framework.presentation.ui.common.OrderDetailScreen

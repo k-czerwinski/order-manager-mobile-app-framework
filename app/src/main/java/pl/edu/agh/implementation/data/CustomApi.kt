@@ -12,14 +12,14 @@ import io.ktor.http.contentType
 import kotlinx.datetime.LocalDateTime
 import pl.edu.agh.framework.data.remote.ApiClient
 import pl.edu.agh.framework.data.remote.HttpResponseException
-import pl.edu.agh.framework.data.remote.dto.Company
-import pl.edu.agh.framework.data.remote.dto.ExpectedDeliveryDateTimeDTO
-import pl.edu.agh.framework.data.remote.dto.OrderCreateDTO
-import pl.edu.agh.framework.data.remote.dto.OrderCreateResponseDTO
-import pl.edu.agh.framework.data.remote.dto.OrderDTO
-import pl.edu.agh.framework.data.remote.dto.OrderListViewItemDTO
-import pl.edu.agh.framework.data.remote.dto.ProductDTO
-import pl.edu.agh.framework.data.remote.dto.UserDTO
+import pl.edu.agh.framework.model.Company
+import pl.edu.agh.implementation.data.dto.ExpectedDeliveryDateTimeDTO
+import pl.edu.agh.implementation.data.dto.OrderCreateDTO
+import pl.edu.agh.implementation.data.dto.OrderCreateResponseDTO
+import pl.edu.agh.implementation.data.dto.OrderDTO
+import pl.edu.agh.implementation.data.dto.OrderListViewItemDTO
+import pl.edu.agh.implementation.data.dto.ProductDTO
+import pl.edu.agh.implementation.data.dto.UserDTO
 import pl.edu.agh.framework.model.UserRole
 
 suspend fun ApiClient.getCompany(companyId: Int): Company {

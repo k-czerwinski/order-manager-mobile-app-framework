@@ -2,9 +2,9 @@ package pl.edu.agh.framework.model
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
-import pl.edu.agh.framework.data.remote.dto.OrderDTO
-import pl.edu.agh.framework.data.remote.dto.OrderListViewItemDTO
-import pl.edu.agh.framework.data.remote.dto.ProductDTO
+import pl.edu.agh.implementation.data.dto.OrderDTO
+import pl.edu.agh.implementation.data.dto.OrderListViewItemDTO
+import pl.edu.agh.implementation.data.dto.ProductDTO
 import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 
