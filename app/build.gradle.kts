@@ -23,6 +23,9 @@ android {
 
         buildConfigField("String", "SERVER_HOST", "\"10.0.2.2\"")
         buildConfigField("String", "SERVER_PORT", "\"8443\"")
+        buildConfigField("String", "LOGIN_PATH", "\"/login\"")
+        buildConfigField("String", "REFRESH_TOKEN_PATH", "\"/refresh-token\"")
+        buildConfigField("String", "LOGOUT_PATH", "\"/logout\"")
     }
 
     buildTypes {

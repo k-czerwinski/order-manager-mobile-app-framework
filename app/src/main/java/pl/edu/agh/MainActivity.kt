@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import pl.edu.agh.data.storage.EncryptedSharedPreferencesManager
-import pl.edu.agh.presentation.navigation.AppNavigation
-import pl.edu.agh.presentation.ui.theme.OrderManagerTheme
+import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
+import pl.edu.agh.framework.presentation.ui.theme.OrderManagerTheme
+import pl.edu.agh.implementation.presentation.navigation.AppNavigation
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
