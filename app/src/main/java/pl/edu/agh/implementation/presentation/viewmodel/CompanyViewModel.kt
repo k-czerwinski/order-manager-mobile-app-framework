@@ -1,4 +1,4 @@
-package pl.edu.agh.framework.presentation.viewmodel
+package pl.edu.agh.implementation.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import pl.edu.agh.framework.data.remote.ApiClient
 import pl.edu.agh.framework.model.Company
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
+import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
 import pl.edu.agh.implementation.data.getCompany
 
 typealias CompanySuccessState = CommonViewModel.State.Success<Company>

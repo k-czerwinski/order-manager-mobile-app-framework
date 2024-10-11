@@ -1,7 +1,6 @@
 package pl.edu.agh.framework.data.remote.dto
 
 import kotlinx.serialization.Serializable
-import pl.edu.agh.framework.model.UserRole
 
 @Serializable
 data class LoginRequest(val username: String, val password: String, val companyDomain: String) {
@@ -18,7 +17,7 @@ data class LoginResponse(
     val refreshToken: String,
     val companyId: Int,
     val userId: Int,
-    val userRole: UserRole
+    val userRole: String
 )
 
 @Serializable

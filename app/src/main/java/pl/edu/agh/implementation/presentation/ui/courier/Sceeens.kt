@@ -6,14 +6,13 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import pl.edu.agh.implementation.data.dto.OrderListViewItemDTO
 import pl.edu.agh.framework.model.OrderListViewItem
 import pl.edu.agh.framework.presentation.ui.common.CenteredCircularProgressIndicator
 import pl.edu.agh.framework.presentation.ui.common.OrderDetailScreen
 import pl.edu.agh.framework.presentation.ui.common.OrderListScreen
 import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
-import pl.edu.agh.framework.presentation.viewmodel.UserStateSuccess
-import pl.edu.agh.framework.presentation.viewmodel.UserViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.UserStateSuccess
+import pl.edu.agh.implementation.presentation.viewmodel.UserViewModel
 import pl.edu.agh.implementation.presentation.navigation.CourierNavigation
 import pl.edu.agh.implementation.presentation.viewmodel.OrderDetailsStateError
 import pl.edu.agh.implementation.presentation.viewmodel.OrderDetailsStateSuccess
@@ -29,14 +28,14 @@ fun CourierOrderListScreen(
     ordersListViewModel: OrdersListViewModel
 ) {
     val ordersState by ordersListViewModel.ordersListState.collectAsState()
-    val orders: List<OrderListViewItemDTO> =
+    val orders: List<OrderListViewItem> =
         (ordersState as? OrdersListStateSuccess)?.data ?: emptyList()
     val userState by userViewModel.userState.collectAsState()
     val userName = (userState as? UserStateSuccess)?.data?.firstName ?: "User"
 
     OrderListScreen(
         userName,
-        orders.map(OrderListViewItem::fromDTO),
+        orders,
         navigateToOrderDetails = { navController.navigate(CourierNavigation.createOrderDetailsRoute(it)) },
         bottomButton = {}
     )

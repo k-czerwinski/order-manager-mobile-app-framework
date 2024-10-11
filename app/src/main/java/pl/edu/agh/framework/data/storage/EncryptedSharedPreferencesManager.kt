@@ -6,7 +6,8 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import pl.edu.agh.framework.data.remote.dto.LoginResponse
 import pl.edu.agh.framework.data.remote.dto.RefreshTokenResponse
-import pl.edu.agh.framework.model.UserRole
+import pl.edu.agh.framework.model.UserRoleInterface
+import pl.edu.agh.framework.model.UserRoleDependencyInjector
 
 object EncryptedSharedPreferencesManager {
 
@@ -16,6 +17,7 @@ object EncryptedSharedPreferencesManager {
     private const val USER_ID_KEY = "user_id"
     private const val USER_ROLE_KEY = "user_role"
     private const val COMPANY_ID_KEY = "company_id"
+    private val userRoleParser = UserRoleDependencyInjector.getUserRoleParser()
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -60,8 +62,8 @@ object EncryptedSharedPreferencesManager {
         saveProperty(USER_ID_KEY, userId)
     }
 
-    private fun saveUserRole(userRole: UserRole) {
-        saveProperty(USER_ROLE_KEY, userRole.name)
+    private fun saveUserRole(userRole: String) {
+        saveProperty(USER_ROLE_KEY, userRole)
     }
 
     private fun saveCompanyId(companyId: Int) {
@@ -84,13 +86,12 @@ object EncryptedSharedPreferencesManager {
         return getIntProperty(USER_ID_KEY)
     }
 
-    fun getUserRole(): UserRole {
-        val roleName = getStringProperty(USER_ROLE_KEY)
-        return UserRole.valueOf(roleName)
+    fun getUserRole(): UserRoleInterface {
+        return userRoleParser.valueOf(getStringProperty(USER_ROLE_KEY))
     }
 
     @Suppress("Unused")
-    fun saveCustomProperty(key: String, value: String) {
+    internal fun saveCustomProperty(key: String, value: String) {
         if (key == ACCESS_TOKEN_KEY || key == REFRESH_TOKEN_KEY || key == USER_ID_KEY || key == USER_ROLE_KEY || key == COMPANY_ID_KEY) {
             throw IllegalArgumentException("Cannot override property for key: $key")
         }
@@ -98,7 +99,7 @@ object EncryptedSharedPreferencesManager {
     }
 
     @Suppress("Unused")
-    fun getCustomProperty(key: String): String {
+    internal fun getCustomProperty(key: String): String {
         return getStringProperty(key)
     }
 

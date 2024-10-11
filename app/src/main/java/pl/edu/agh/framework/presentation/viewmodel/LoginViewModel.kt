@@ -12,10 +12,12 @@ import pl.edu.agh.framework.data.remote.ApiClient.login
 import pl.edu.agh.framework.data.remote.HttpResponseException
 import pl.edu.agh.framework.data.remote.dto.LoginRequest
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
-import pl.edu.agh.framework.model.UserRole
+import pl.edu.agh.framework.model.UserRoleInterface
+import pl.edu.agh.framework.model.UserRoleDependencyInjector
 
 class LoginViewModel : ViewModel() {
 
+    private val userRoleParser = UserRoleDependencyInjector.getUserRoleParser()
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState: StateFlow<LoginState> = _loginState
 
@@ -26,8 +28,9 @@ class LoginViewModel : ViewModel() {
                 val loginRequest = LoginRequest(username, password, companyDomain)
                 Log.d("LoginViewModel", "Sending login request")
                 val loginResponse = ApiClient.login(loginRequest)
+                val userRole = userRoleParser.valueOf(loginResponse.userRole)
                 EncryptedSharedPreferencesManager.saveLoggedInUser(loginResponse)
-                _loginState.value = LoginState.Success(loginResponse.userRole)
+                _loginState.value = LoginState.Success(userRole)
             } catch (illegalArgumentException: IllegalArgumentException) {
                 _loginState.value =
                     LoginState.EmptyFields(illegalArgumentException.message ?: "Empty fields")
@@ -52,7 +55,7 @@ class LoginViewModel : ViewModel() {
     sealed class LoginState {
         data object Idle : LoginState()
         data object Loading : LoginState()
-        data class Success(val userRole: UserRole) : LoginState()
+        data class Success(val userRole: UserRoleInterface) : LoginState()
         data class UnexpectedError(val message: String) : LoginState()
         data class EmptyFields(val message: String) : LoginState()
         data class InvalidCredentials(val message: String) : LoginState()

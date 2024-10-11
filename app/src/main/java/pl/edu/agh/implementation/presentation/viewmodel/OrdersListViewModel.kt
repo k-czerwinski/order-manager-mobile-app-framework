@@ -7,14 +7,17 @@ import kotlinx.coroutines.launch
 import pl.edu.agh.framework.data.remote.ApiClient
 import pl.edu.agh.implementation.data.dto.OrderListViewItemDTO
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
+import pl.edu.agh.framework.model.OrderListViewItem
+import pl.edu.agh.framework.model.UserRoleInterface
 import pl.edu.agh.framework.presentation.viewmodel.CommonListViewModel
 import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
 import pl.edu.agh.implementation.data.getOrders
+import pl.edu.agh.implementation.model.UserRole
 
-typealias OrdersListStateSuccess = CommonViewModel.State.Success<List<OrderListViewItemDTO>>
+typealias OrdersListStateSuccess = CommonViewModel.State.Success<List<OrderListViewItem>>
 
-class OrdersListViewModel : CommonListViewModel<OrderListViewItemDTO>() {
-    val ordersListState: StateFlow<State<List<OrderListViewItemDTO>>> = state
+class OrdersListViewModel : CommonListViewModel<OrderListViewItem>() {
+    val ordersListState: StateFlow<State<List<OrderListViewItem>>> = state
 
     init {
         loadOrders()
@@ -32,7 +35,7 @@ class OrdersListViewModel : CommonListViewModel<OrderListViewItemDTO>() {
             val companyId = EncryptedSharedPreferencesManager.getCompanyId()
             val userRole = EncryptedSharedPreferencesManager.getUserRole()
             val userId = EncryptedSharedPreferencesManager.getUserId()
-            val orders = ApiClient.getOrders(companyId, userRole, userId)
+            val orders = ApiClient.getOrders(companyId, userRole as UserRole, userId).map(OrderListViewItemDTO::toModel)
             state.value = State.Success(orders)
         } catch (e: Exception) {
             Log.d("OrdersViewModel", "Error fetching orders: ${e.message}")

@@ -11,8 +11,8 @@ import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.presentation.navigation.AuthNavigation
 import pl.edu.agh.framework.presentation.sharedViewModel
 import pl.edu.agh.framework.presentation.ui.common.UnexpectedErrorScreen
-import pl.edu.agh.framework.presentation.viewmodel.CompanyViewModel
-import pl.edu.agh.framework.presentation.viewmodel.UserViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.CompanyViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.UserViewModel
 import pl.edu.agh.implementation.presentation.ui.courier.CourierOrderDetailsScreen
 import pl.edu.agh.implementation.presentation.ui.courier.CourierOrderListScreen
 import pl.edu.agh.implementation.presentation.ui.courier.CourierOrderSetExpectedDeliveryScreen

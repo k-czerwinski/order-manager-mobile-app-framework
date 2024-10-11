@@ -9,7 +9,9 @@ import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.model.Product
 import pl.edu.agh.framework.presentation.viewmodel.CommonListViewModel
 import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
+import pl.edu.agh.implementation.data.dto.ProductDTO
 import pl.edu.agh.implementation.data.getProducts
+import pl.edu.agh.implementation.model.UserRole
 
 typealias ProductListStateSuccess = CommonViewModel.State.Success<List<Product>>
 typealias ProductListStateError = CommonViewModel.State.Error
@@ -29,7 +31,7 @@ class ProductListViewModel : CommonListViewModel<Product>() {
             val companyId = EncryptedSharedPreferencesManager.getCompanyId()
             val userRole = EncryptedSharedPreferencesManager.getUserRole()
 
-            val products = ApiClient.getProducts(companyId, userRole).map(Product::fromDTO)
+            val products = ApiClient.getProducts(companyId, userRole as UserRole).map(ProductDTO::toModel)
             state.value = State.Success(products)
         } catch (e: Exception) {
             Log.d("ProductListViewModel", "Error fetching orders: ${e.message}")

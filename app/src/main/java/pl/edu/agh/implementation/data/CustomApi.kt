@@ -13,6 +13,7 @@ import kotlinx.datetime.LocalDateTime
 import pl.edu.agh.framework.data.remote.ApiClient
 import pl.edu.agh.framework.data.remote.HttpResponseException
 import pl.edu.agh.framework.model.Company
+import pl.edu.agh.framework.model.UserRoleInterface
 import pl.edu.agh.implementation.data.dto.ExpectedDeliveryDateTimeDTO
 import pl.edu.agh.implementation.data.dto.OrderCreateDTO
 import pl.edu.agh.implementation.data.dto.OrderCreateResponseDTO
@@ -20,7 +21,7 @@ import pl.edu.agh.implementation.data.dto.OrderDTO
 import pl.edu.agh.implementation.data.dto.OrderListViewItemDTO
 import pl.edu.agh.implementation.data.dto.ProductDTO
 import pl.edu.agh.implementation.data.dto.UserDTO
-import pl.edu.agh.framework.model.UserRole
+import pl.edu.agh.implementation.model.UserRole
 
 suspend fun ApiClient.getCompany(companyId: Int): Company {
     val response = authenticatedClient.get("$SERVER_URL/company/${companyId}")
@@ -51,7 +52,7 @@ suspend fun ApiClient.getOrders(
     }
 }
 
-suspend fun ApiClient.getCurrentUser(companyId: Int, userRole: UserRole): UserDTO {
+suspend fun ApiClient.getCurrentUser(companyId: Int, userRole: UserRoleInterface): UserDTO {
     val response = authenticatedClient.get("$SERVER_URL/company/${companyId}/${userRole.urlName}")
     Log.d("ApiClient", response.toString())
     return when (response.status) {

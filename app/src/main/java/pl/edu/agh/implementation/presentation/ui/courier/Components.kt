@@ -18,8 +18,8 @@ import pl.edu.agh.R
 import pl.edu.agh.framework.presentation.ui.common.AppMenu
 import pl.edu.agh.framework.presentation.ui.common.AppScreen
 import pl.edu.agh.framework.presentation.ui.common.AppTopBar
-import pl.edu.agh.framework.presentation.viewmodel.CompanySuccessState
-import pl.edu.agh.framework.presentation.viewmodel.CompanyViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.CompanySuccessState
+import pl.edu.agh.implementation.presentation.viewmodel.CompanyViewModel
 import pl.edu.agh.implementation.presentation.navigation.CourierNavigation
 
 @Composable

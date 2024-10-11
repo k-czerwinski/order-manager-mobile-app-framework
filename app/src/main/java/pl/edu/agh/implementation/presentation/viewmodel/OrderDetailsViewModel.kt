@@ -8,7 +8,9 @@ import pl.edu.agh.framework.data.remote.ApiClient
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.model.Order
 import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
+import pl.edu.agh.implementation.data.dto.OrderDTO
 import pl.edu.agh.implementation.data.getOrderDetails
+import pl.edu.agh.implementation.model.UserRole
 
 typealias OrderDetailsStateSuccess = CommonViewModel.State.Success<Order>
 typealias OrderDetailsStateError = CommonViewModel.State.Error
@@ -28,8 +30,8 @@ class OrderDetailsViewModel(private val orderId: Int) : CommonViewModel<Order>()
             val companyId = EncryptedSharedPreferencesManager.getCompanyId()
             val userRole = EncryptedSharedPreferencesManager.getUserRole()
             val userId = EncryptedSharedPreferencesManager.getUserId()
-            val orderDetailsDTO = ApiClient.getOrderDetails(companyId, userRole, userId, orderId)
-            state.value = State.Success(Order.fromDTO(orderDetailsDTO))
+            val orderDetailsDTO = ApiClient.getOrderDetails(companyId, userRole as UserRole, userId, orderId)
+            state.value = State.Success(OrderDTO.toModel(orderDetailsDTO))
         } catch (e: Exception) {
             Log.d(
                 "OrdersViewModel",
