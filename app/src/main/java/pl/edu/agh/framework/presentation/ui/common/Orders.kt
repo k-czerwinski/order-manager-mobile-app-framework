@@ -57,23 +57,23 @@ import java.math.BigDecimal
 fun OrderStatusWithDescription(status: OrderStatus) {
     val (iconResource, description) = when (status) {
         OrderStatus.CREATED -> Pair(
-            painterResource(id = R.drawable.ic_order_created),
-            stringResource(id = R.string.order_status_created)
+            painterResource(id = R.drawable.ic_order_status_created),
+            stringResource(id = R.string.order_status_created_ic_description)
         )
 
         OrderStatus.IN_PROGRESS -> Pair(
-            painterResource(id = R.drawable.ic_order_in_progress),
-            stringResource(id = R.string.order_status_in_progress)
+            painterResource(id = R.drawable.ic_order_status_in_progress),
+            stringResource(id = R.string.order_status_in_progress_ic_description)
         )
 
         OrderStatus.IN_DELIVERY -> Pair(
             painterResource(id = R.drawable.ic_order_status_in_delivery),
-            stringResource(id = R.string.order_status_in_delivery)
+            stringResource(id = R.string.order_status_in_delivery_ic_description)
         )
 
         OrderStatus.COMPLETED -> Pair(
-            painterResource(id = R.drawable.ic_order_completed),
-            stringResource(id = R.string.order_status_completed)
+            painterResource(id = R.drawable.ic_order_status_completed),
+            stringResource(id = R.string.order_status_completed_ic_description)
         )
     }
     Column(

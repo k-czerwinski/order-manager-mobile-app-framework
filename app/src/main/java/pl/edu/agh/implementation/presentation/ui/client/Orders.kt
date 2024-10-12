@@ -93,7 +93,7 @@ fun onProductQuantityChange(products: MutableMap<Product, Int>, product: Product
 
 @Composable
 fun OrderConfirmedDialog(backToOrderListView: () -> Unit) {
-    DismissButtonDialog(R.drawable.ic_order_created,
+    DismissButtonDialog(R.drawable.ic_order_status_created,
         stringResource(R.string.order_confirmed_dialog_title),
         stringResource(R.string.order_confirmed_dialog_description),
         backToOrderListView,
@@ -103,7 +103,7 @@ fun OrderConfirmedDialog(backToOrderListView: () -> Unit) {
 
 @Composable
 fun NoProductSelectedDialog(backToNewOrderScreen: () -> Unit) {
-    DismissButtonDialog(R.drawable.error,
+    DismissButtonDialog(R.drawable.ic_error,
         stringResource(R.string.order_new_no_product_selected_dialog_title),
         stringResource(R.string.order_new_no_product_selected_dialog_description),
         backToNewOrderScreen,

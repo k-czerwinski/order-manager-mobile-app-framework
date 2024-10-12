@@ -118,7 +118,7 @@ fun OrderMarkAsDeliveredAlert(onConfirmButton: () -> Unit, onDismissButton: () -
     AlertDialog(
         icon = {
             Icon(
-                painterResource(R.drawable.warning),
+                painterResource(R.drawable.ic_warning),
                 contentDescription = "Order will be marked as delivered"
             )
         },
@@ -147,7 +147,7 @@ fun OrderMarkAsDeliveredAlert(onConfirmButton: () -> Unit, onDismissButton: () -
 @Composable
 fun OrderSuccessfullyMarkedAsDeliveredDialog(onDismissButton: () -> Unit) {
     DismissButtonDialog(
-        R.drawable.ic_order_completed,
+        R.drawable.ic_order_status_completed,
         stringResource(R.string.order_delivered_dialog_title),
         stringResource(R.string.order_delivered_dialog_description),
         onDismissButton,
@@ -160,7 +160,7 @@ fun OrderCouldNotBeMarkedAsDelivered(
     onDismissButton: () -> Unit
 ) {
     DismissButtonDialog(
-        R.drawable.error,
+        R.drawable.ic_error,
         stringResource(R.string.order_set_delivered_error_dialog_title),
         stringResource(R.string.order_set_delivered_error_dialog_description),
         onDismissButton,
@@ -171,7 +171,7 @@ fun OrderCouldNotBeMarkedAsDelivered(
 @Composable
 fun OrderExpectedDeliverySetSuccessfullyDialog(onDismissButton: () -> Unit) {
     DismissButtonDialog(
-        R.drawable.ic_order_completed,
+        R.drawable.ic_order_status_completed,
         stringResource(R.string.order_expected_delivery_set_successfully_dialog_title),
         stringResource(R.string.order_expected_delivery_set_successfully_dialog_description),
         onDismissButton,
@@ -182,7 +182,7 @@ fun OrderExpectedDeliverySetSuccessfullyDialog(onDismissButton: () -> Unit) {
 @Composable
 fun OrderExpectedDeliverySetErrorDialog(onDismissButton: () -> Unit) {
     DismissButtonDialog(
-        R.drawable.error,
+        R.drawable.ic_error,
         stringResource(R.string.order_expected_delivery_set_error_dialog_title),
         stringResource(R.string.order_expected_delivery_set_error_dialog_description),
         onDismissButton,

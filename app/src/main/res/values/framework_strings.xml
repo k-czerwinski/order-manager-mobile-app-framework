@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Order Manager</string>
+    <string name="app_name_postfix"> - @string/app_name</string>
+    <string name="login_button">Login</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_company_domain">Company domain</string>
+    <string name="login_invalid_credentials">Invalid credentials</string>
+    <string name="login_empty_field">This field cannot be empty</string>
+    <string name="login_unexpected_error">Unexpected error</string>
+    <string name="login_try_again">Try again</string>
+    <string name="login_contact_administrator">If this problem persists, contact the administrator</string>
+    <string name="order_status_created_ic_description">Created</string>
+    <string name="order_status_in_progress_ic_description">In progress</string>
+    <string name="order_status_in_delivery_ic_description">In delivery</string>
+    <string name="order_status_completed_ic_description">Completed</string>
+    <string name="order_total_price">Total Price: %1$s</string>
+    <string name="order_expected_delivery_on">Expected delivery: %1$s</string>
+    <string name="order_delivered_on">Delivered: %1$s</string>
+    <string name="order_placed_on">Placed on: %1$s</string>
+    <string name="user_screen_greeting">Hello, %1s!</string>
+    <string name="user_screen_orders">Your orders</string>
+    <string name="price_per_item">Price per item: %1$s</string>
+    <string name="quantity">Quantity: %1$s</string>
+    <string name="total_price">Total price: %1$s</string>
+    <string name="product_price">Price: %1$s</string>
+</resources>

@@ -1,5 +1,6 @@
 package pl.edu.agh.framework.presentation.ui.common
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -156,6 +157,7 @@ fun LoginErrorScreen(errorMessage: String, errorDescription: String, onTryAgain:
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(40.dp, 32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

@@ -1,5 +1,6 @@
 package pl.edu.agh.framework.presentation.navigation
 
+import androidx.compose.material3.Surface
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -29,7 +30,9 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
     ) {
         composable(AuthNavigation.LoginStart.route) {
             val loginViewModel = it.sharedViewModel<LoginViewModel>(navController)
-            LoginScreen(navController, loginViewModel)
+            Surface {
+                LoginScreen(navController, loginViewModel)
+            }
         }
         composable(AuthNavigation.InvalidCredentials.route) {
             LoginInvalidCredentialsScreen {

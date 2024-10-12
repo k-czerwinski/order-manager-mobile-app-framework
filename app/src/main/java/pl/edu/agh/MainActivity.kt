@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.model.UserRoleDependencyInjector
 import pl.edu.agh.framework.presentation.navigation.AppNavigation
+import pl.edu.agh.framework.presentation.ui.theme.AppTheme
 import pl.edu.agh.implementation.model.UserRoleParserImpl
 
 class MainActivity : ComponentActivity() {
@@ -16,7 +17,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AppNavigation()
+            AppTheme {
+                AppNavigation()
+            }
         }
     }
 }

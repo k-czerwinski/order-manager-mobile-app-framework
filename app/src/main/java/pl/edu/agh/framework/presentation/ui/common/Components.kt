@@ -3,7 +3,6 @@
 package pl.edu.agh.framework.presentation.ui.common
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +26,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -81,7 +79,6 @@ fun AppMenu(showMenu: Boolean, onDismissRequest: () -> Unit, menuItems: @Composa
         expanded = showMenu,
         onDismissRequest = onDismissRequest,
         modifier = Modifier
-            .background(Color.White)
             .width(200.dp)
     ) {
         menuItems()
