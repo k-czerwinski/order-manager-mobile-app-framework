@@ -21,6 +21,7 @@ import pl.edu.agh.implementation.data.dto.OrderDTO
 import pl.edu.agh.implementation.data.dto.OrderListViewItemDTO
 import pl.edu.agh.implementation.data.dto.ProductDTO
 import pl.edu.agh.implementation.data.dto.UserDTO
+import pl.edu.agh.implementation.data.dto.UserListViewItemDTO
 import pl.edu.agh.implementation.model.UserRole
 
 suspend fun ApiClient.getCompany(companyId: Int): Company {
@@ -151,6 +152,40 @@ suspend fun ApiClient.setExpectedDeliveryDateTime(
         throw HttpResponseException(
             response.status,
             "Unexpected error when setting expected delivery date"
+        )
+    }
+}
+
+suspend fun ApiClient.sendOrder(companyId: Int, adminId: Int, orderId: Int, courierId: Int) {
+    val response = authenticatedClient.put(
+        "$SERVER_URL/company/${companyId}" +
+                "/admin/${adminId}/order/${orderId}/send?courierId=${courierId}")
+    Log.d("ApiClient", response.toString())
+    if (response.status != HttpStatusCode.NoContent) {
+        throw HttpResponseException(
+            response.status,
+            "Unexpected error when setting order as sent")
+    }
+}
+
+suspend fun ApiClient.getUsers(
+    companyId: Int,
+    userRole: UserRole,
+    userId: Int,
+    requiredRole: UserRole?
+): List<UserListViewItemDTO> {
+    var url = "$SERVER_URL/company/${companyId}/${userRole.urlName}/${userId}/users"
+    if (requiredRole != null) {
+        url += "?role=${requiredRole.urlName}"
+    }
+    val response =
+        authenticatedClient.get(url)
+    Log.d("ApiClient", response.toString())
+    return when (response.status) {
+        HttpStatusCode.OK -> response.body()
+        else -> throw HttpResponseException(
+            response.status,
+            "Unexpected error fetching users list"
         )
     }
 }

@@ -94,7 +94,7 @@ fun OrderStatusWithDescription(status: OrderStatus) {
 }
 
 @Composable
-fun OrderItem(order: OrderListViewItem, onClick: () -> Unit) {
+fun OrderListItem(order: OrderListViewItem, onClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -132,7 +132,7 @@ fun OrdersList(orders: List<OrderListViewItem>, navigateToOrderDetails: (orderId
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(orders) { order ->
-            OrderItem(
+            OrderListItem(
                 order = order,
                 onClick = { navigateToOrderDetails(order.id) })
         }

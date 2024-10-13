@@ -28,6 +28,10 @@ class LoginViewModel : ViewModel() {
                 val loginRequest = LoginRequest(username, password, companyDomain)
                 Log.d("LoginViewModel", "Sending login request")
                 val loginResponse = ApiClient.login(loginRequest)
+                if (loginResponse.userRole.isEmpty() || !userRoleParser.isValueSupported(loginResponse.userRole)) {
+                    _loginState.value = LoginState.InvalidCredentials("User role not supported")
+                    return@launch
+                }
                 val userRole = userRoleParser.valueOf(loginResponse.userRole)
                 EncryptedSharedPreferencesManager.saveLoggedInUser(loginResponse)
                 _loginState.value = LoginState.Success(userRole)

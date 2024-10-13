@@ -5,24 +5,28 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import pl.edu.agh.framework.data.remote.ApiClient
-import pl.edu.agh.implementation.data.dto.OrderListViewItemDTO
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
-import pl.edu.agh.framework.model.OrderListViewItem
+import pl.edu.agh.framework.model.UserListViewItem
 import pl.edu.agh.framework.presentation.viewmodel.CommonListViewModel
 import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
-import pl.edu.agh.implementation.data.getOrders
+import pl.edu.agh.implementation.data.dto.UserListViewItemDTO
+import pl.edu.agh.implementation.data.getUsers
 import pl.edu.agh.implementation.model.UserRole
 
-typealias OrdersListStateSuccess = CommonViewModel.State.Success<List<OrderListViewItem>>
+typealias UserListStateSuccess = CommonViewModel.State.Success<List<UserListViewItem>>
+typealias UserListStateError = CommonViewModel.State.Error
 
-class OrdersListViewModel : CommonListViewModel<OrderListViewItem>() {
-    val ordersListState: StateFlow<State<List<OrderListViewItem>>> = state
+class CourierListViewModel : UserListViewModel(UserRole.COURIER)
+
+open class UserListViewModel(private val requiredRole: UserRole? = null) :
+    CommonListViewModel<UserListViewItem>() {
+    val userListState: StateFlow<State<List<UserListViewItem>>> = state
 
     init {
-        loadOrders()
+        loadUsers()
     }
 
-    fun loadOrders() {
+    private fun loadUsers() {
         viewModelScope.launch {
             fetchData()
         }
@@ -34,8 +38,9 @@ class OrdersListViewModel : CommonListViewModel<OrderListViewItem>() {
             val companyId = EncryptedSharedPreferencesManager.getCompanyId()
             val userRole = EncryptedSharedPreferencesManager.getUserRole()
             val userId = EncryptedSharedPreferencesManager.getUserId()
-            val orders = ApiClient.getOrders(companyId, userRole as UserRole, userId).map(OrderListViewItemDTO::toModel)
-            state.value = State.Success(orders)
+            val users = ApiClient.getUsers(companyId, userRole as UserRole, userId, requiredRole)
+                .map(UserListViewItemDTO::toModel)
+            state.value = State.Success(users)
         } catch (e: Exception) {
             Log.d("OrdersViewModel", "Error fetching orders: ${e.message}")
             state.value = State.Error("Error fetching orders: ${e.message}")

@@ -147,7 +147,7 @@ fun OrderMarkAsDeliveredAlert(onConfirmButton: () -> Unit, onDismissButton: () -
 @Composable
 fun OrderSuccessfullyMarkedAsDeliveredDialog(onDismissButton: () -> Unit) {
     DismissButtonDialog(
-        R.drawable.ic_order_status_completed,
+        R.drawable.ic_action_completed,
         stringResource(R.string.order_delivered_dialog_title),
         stringResource(R.string.order_delivered_dialog_description),
         onDismissButton,
@@ -171,7 +171,7 @@ fun OrderCouldNotBeMarkedAsDelivered(
 @Composable
 fun OrderExpectedDeliverySetSuccessfullyDialog(onDismissButton: () -> Unit) {
     DismissButtonDialog(
-        R.drawable.ic_order_status_completed,
+        R.drawable.ic_action_completed,
         stringResource(R.string.order_expected_delivery_set_successfully_dialog_title),
         stringResource(R.string.order_expected_delivery_set_successfully_dialog_description),
         onDismissButton,

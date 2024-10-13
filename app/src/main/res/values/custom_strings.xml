@@ -1,6 +1,11 @@
 <resources>
     <string name="menu_logout">Logout</string>
     <string name="menu_orders">Orders</string>
+    <string name="order_dialog_to_order_details_button">Back to order details</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <!-- CLIENT STRINGS -->
+    <string name="client_role_display_name">Client</string>
     <string name="menu_new_order">New order</string>
     <string name="button_new_order">New order</string>
     <string name="order_name_label">Custom order name</string>
@@ -13,15 +18,14 @@
     <string name="order_confirmed_dialog_title">Order confirmed</string>
     <string name="order_confirmed_dialog_description">Order has been successfully created. We will soon provide you with further updates.</string>
     <string name="order_dialog_to_list_button">Back to orders</string>
+    <!-- COURIER STRINGS -->
+    <string name="courier_role_display_name">Deliveryman</string>
     <string name="courier_set_delivered_button">Set delivered</string>
     <string name="courier_update_expected_delivery_button">Set expected delivery</string>
     <string name="order_set_delivered_alert_dialog_title">Do you want to set this order as delivered?</string>
     <string name="order_set_delivered_alert_dialog_description">This operation cannot be undone.</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
     <string name="order_delivered_dialog_title">Order has been marked as delivered</string>
     <string name="order_delivered_dialog_description">If this operation was not intended please contact administrator.</string>
-    <string name="order_dialog_to_order_details_button">Back to order details</string>
     <string name="order_set_delivered_error_dialog_title">Please try again</string>
     <string name="order_set_delivered_error_dialog_description">Unexpected error when marking order as delivered. If this error persists please contact administrator.</string>
     <string name="order_expected_delivery_date_picker_label">Expected delivery date</string>
@@ -32,4 +36,19 @@
     <string name="order_expected_delivery_set_successfully_dialog_description">If this operation was not intended you can try again with desired date and time.</string>
     <string name="order_expected_delivery_set_error_dialog_title">Unexpected error</string>
     <string name="order_expected_delivery_set_error_dialog_description">Unexpected error when setting expected delivery. Return to order detail screen and try again.</string>
+    <!--ADMIN STRINGS-->
+    <string name="admin_role_display_name">Admin</string>
+    <string name="menu_users">Users</string>
+    <string name="menu_new_user">New user</string>
+    <string name="menu_products">Products</string>
+    <string name="menu_new_product">New product</string>
+    <string name="admin_send_order_button">Send order</string>
+    <string name="order_send_successfully_dialog_title">Order has been send</string>
+    <string name="order_send_successfully_dialog_description">Now courier is assigned to this order.</string>
+    <string name="order_could_not_be_send_dialog_title">Unexpected error when sending order</string>
+    <string name="order_could_not_be_send_dialog_description">Please try again. If this error still occurs contact system administrator.</string>
+    <string name="order_could_not_be_send_try_again">Try again</string>
+    <string name="order_send_confirmation_dialog_title">Do you want to send this order?</string>
+    <string name="order_send_confirmation_dialog_description">This operation cannot be undone. Order will be assigned to courier: %1s %2s.</string>
+    <string name="order_choose_courier_title">Choose courier from the list below</string>
 </resources>

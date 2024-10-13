@@ -25,4 +25,7 @@
     <string name="quantity">Quantity: %1$s</string>
     <string name="total_price">Total price: %1$s</string>
     <string name="product_price">Price: %1$s</string>
+    <string name="user_identity_title">%1$s %2$s</string>
+    <string name="user_role_subtitle">Role: %1$s</string>
+    <string name="user_list_title">Users in the current company:</string>
 </resources>

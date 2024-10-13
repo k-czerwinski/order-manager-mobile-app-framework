@@ -7,13 +7,14 @@ import kotlinx.coroutines.launch
 import pl.edu.agh.framework.data.remote.ApiClient
 import pl.edu.agh.implementation.data.dto.UserDTO
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
+import pl.edu.agh.framework.model.User
 import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
 import pl.edu.agh.implementation.data.getCurrentUser
 
-typealias UserStateSuccess = CommonViewModel.State.Success<UserDTO>
+typealias UserStateSuccess = CommonViewModel.State.Success<User>
 
-class UserViewModel : CommonViewModel<UserDTO>() {
-    val userState: StateFlow<State<UserDTO>> = state
+class UserViewModel : CommonViewModel<User>() {
+    val userState: StateFlow<State<User>> = state
 
     init {
         viewModelScope.launch {
@@ -26,8 +27,8 @@ class UserViewModel : CommonViewModel<UserDTO>() {
             state.value = State.Loading
             val companyId = EncryptedSharedPreferencesManager.getCompanyId()
             val userRole = EncryptedSharedPreferencesManager.getUserRole()
-            val users = ApiClient.getCurrentUser(companyId, userRole)
-            state.value = State.Success(users)
+            val user = ApiClient.getCurrentUser(companyId, userRole).let(UserDTO::toModel)
+            state.value = State.Success(user)
         } catch (e: Exception) {
             Log.d("UserViewModel", "Error fetching orders: ${e.message}")
             state.value = State.Error("Error fetching orders: ${e.message}")

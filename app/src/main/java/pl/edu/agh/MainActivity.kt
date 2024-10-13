@@ -8,11 +8,11 @@ import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.model.UserRoleDependencyInjector
 import pl.edu.agh.framework.presentation.navigation.AppNavigation
 import pl.edu.agh.framework.presentation.ui.theme.AppTheme
-import pl.edu.agh.implementation.model.UserRoleParserImpl
+import pl.edu.agh.implementation.model.UserRoleParserInterfaceImpl
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        UserRoleDependencyInjector.registerUserRoleParser(UserRoleParserImpl)
+        UserRoleDependencyInjector.registerUserRoleParser(UserRoleParserInterfaceImpl)
         EncryptedSharedPreferencesManager.initialize(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
