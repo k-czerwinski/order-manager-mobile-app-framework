@@ -11,9 +11,11 @@ import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.presentation.navigation.AuthNavigation
 import pl.edu.agh.framework.presentation.sharedViewModel
 import pl.edu.agh.framework.presentation.ui.common.UnexpectedErrorScreen
+import pl.edu.agh.implementation.presentation.ui.admin.AddUserScreen
 import pl.edu.agh.implementation.presentation.ui.admin.AdminOrderDetailsScreen
 import pl.edu.agh.implementation.presentation.ui.admin.AdminOrderListScreen
 import pl.edu.agh.implementation.presentation.ui.admin.AdminSendOrderScreen
+import pl.edu.agh.implementation.presentation.ui.admin.AdminUserDetailsScreen
 import pl.edu.agh.implementation.presentation.ui.admin.AdminUserListScreen
 import pl.edu.agh.implementation.presentation.ui.admin.LoggedInAdminLayout
 import pl.edu.agh.implementation.presentation.ui.courier.LoggedInCourierLayout
@@ -21,7 +23,7 @@ import pl.edu.agh.implementation.presentation.viewmodel.CompanyViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.CourierListViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.OrdersListViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.UserListViewModel
-import pl.edu.agh.implementation.presentation.viewmodel.UserViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.CurrentUserViewModel
 
 enum class AdminNavigation(route: String) {
     OrderList("order_list"),
@@ -30,7 +32,7 @@ enum class AdminNavigation(route: String) {
     ProductList("product_list"),
     CreateProduct("create_product"),
     UserList("user_list"),
-//    UserDetails("user_details/{userId}"), // with list of orders which user has created
+    UserDetails("user_details/{userId}"),
     CreateUser("create_user"),
     Logout("logout"),
     UnexpectedError("unexpected_error");
@@ -43,6 +45,9 @@ enum class AdminNavigation(route: String) {
 
         fun createSendOrderRoute(orderId: Int) =
             "${CustomNavigation.Admin.route}/send_order/$orderId"
+
+        fun createUserDetailsRoute(userId: Int) =
+            "${CustomNavigation.Admin.route}/user_details/$userId"
     }
 }
 fun NavGraphBuilder.adminGraph(navController: NavHostController) {
@@ -52,9 +57,9 @@ fun NavGraphBuilder.adminGraph(navController: NavHostController) {
         composable(AdminNavigation.OrderList.route) {
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
             val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
-            val userViewModel = it.sharedViewModel<UserViewModel>(navController)
+            val currentUserViewModel = it.sharedViewModel<CurrentUserViewModel>(navController)
             LoggedInAdminLayout(navController, companyViewModel) {
-                AdminOrderListScreen(navController, ordersListViewModel, userViewModel)
+                AdminOrderListScreen(navController, ordersListViewModel, currentUserViewModel)
             }
         }
         composable(AdminNavigation.OrderDetails.route) {
@@ -67,6 +72,7 @@ fun NavGraphBuilder.adminGraph(navController: NavHostController) {
                 AdminOrderDetailsScreen(navController, orderId!!)
             }
         }
+
         composable(AdminNavigation.SendOrder.route) {
             val orderId = it.arguments?.getString("orderId")?.toInt()
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
@@ -79,6 +85,7 @@ fun NavGraphBuilder.adminGraph(navController: NavHostController) {
                 AdminSendOrderScreen(navController, orderId!!, courierListViewModel, ordersListViewModel)
             }
         }
+
         composable(AdminNavigation.UserList.route) {
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
             val userListViewModel = it.sharedViewModel<UserListViewModel>(navController)
@@ -87,6 +94,27 @@ fun NavGraphBuilder.adminGraph(navController: NavHostController) {
                 companyViewModel = companyViewModel
             ) {
                 AdminUserListScreen(navController, userListViewModel)
+            }
+        }
+
+        composable(AdminNavigation.UserDetails.route) {
+            val userId = it.arguments?.getString("userId")?.toInt()
+            val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            LoggedInAdminLayout(
+                navController = navController,
+                companyViewModel = companyViewModel
+            ) {
+                AdminUserDetailsScreen(navController, userId!!)
+            }
+        }
+
+        composable(AdminNavigation.CreateUser.route) {
+            val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            LoggedInAdminLayout(
+                navController = navController,
+                companyViewModel = companyViewModel
+            ) {
+                AddUserScreen(navController)
             }
         }
 

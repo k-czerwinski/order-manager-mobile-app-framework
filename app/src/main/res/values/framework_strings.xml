@@ -20,7 +20,7 @@
     <string name="order_delivered_on">Delivered: %1$s</string>
     <string name="order_placed_on">Placed on: %1$s</string>
     <string name="user_screen_greeting">Hello, %1s!</string>
-    <string name="user_screen_orders">Your orders</string>
+    <string name="user_screen_orders">Orders</string>
     <string name="price_per_item">Price per item: %1$s</string>
     <string name="quantity">Quantity: %1$s</string>
     <string name="total_price">Total price: %1$s</string>
@@ -28,4 +28,9 @@
     <string name="user_identity_title">%1$s %2$s</string>
     <string name="user_role_subtitle">Role: %1$s</string>
     <string name="user_list_title">Users in the current company:</string>
+    <string name="user_info_first_name">First name</string>
+    <string name="user_info_last_name">Last name</string>
+    <string name="user_info_role">Role</string>
+    <string name="user_info_username">Username</string>
+    <string name="user_info_password">Password</string>
 </resources>

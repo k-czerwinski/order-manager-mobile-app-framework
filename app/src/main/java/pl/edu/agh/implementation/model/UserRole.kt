@@ -1,5 +1,6 @@
 package pl.edu.agh.implementation.model
 
+import io.ktor.util.toUpperCasePreservingASCIIRules
 import pl.edu.agh.R
 import pl.edu.agh.framework.model.UserRoleInterface
 import pl.edu.agh.framework.model.UserRoleParserInterface
@@ -18,7 +19,7 @@ enum class UserRole(
 object UserRoleParserInterfaceImpl : UserRoleParserInterface {
     override fun values(): List<UserRoleInterface> = UserRole.entries
 
-    override fun valueOf(name: String): UserRoleInterface = UserRole.valueOf(name)
+    override fun valueOf(name: String): UserRoleInterface = UserRole.valueOf(name.toUpperCasePreservingASCIIRules())
 
     override fun isValueSupported(name: String): Boolean =
         UserRole.entries.toList().map(UserRole::toString).any { it.lowercase() == name.lowercase() }

@@ -20,7 +20,7 @@ import pl.edu.agh.framework.presentation.ui.common.OrderDetailScreen
 import pl.edu.agh.framework.presentation.ui.common.OrderListScreen
 import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.UserStateSuccess
-import pl.edu.agh.implementation.presentation.viewmodel.UserViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.CurrentUserViewModel
 import pl.edu.agh.implementation.presentation.navigation.ClientNavigation
 import pl.edu.agh.implementation.presentation.viewmodel.OrderDetailsStateError
 import pl.edu.agh.implementation.presentation.viewmodel.OrderDetailsStateSuccess
@@ -35,12 +35,12 @@ import pl.edu.agh.implementation.presentation.viewmodel.ProductListViewModel
 fun ClientOrdersScreen(
     navController: NavController,
     ordersListViewModel: OrdersListViewModel,
-    userViewModel: UserViewModel
+    currentUserViewModel: CurrentUserViewModel
 ) {
     val ordersState by ordersListViewModel.ordersListState.collectAsState()
     val orders: List<OrderListViewItem> =
         (ordersState as? OrdersListStateSuccess)?.data ?: emptyList()
-    val userState by userViewModel.userState.collectAsState()
+    val userState by currentUserViewModel.userState.collectAsState()
     val userName = (userState as? UserStateSuccess)?.data?.firstName ?: "User"
 
     OrderListScreen(

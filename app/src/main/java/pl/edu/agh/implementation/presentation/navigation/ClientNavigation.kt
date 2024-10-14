@@ -12,7 +12,7 @@ import pl.edu.agh.framework.presentation.navigation.AuthNavigation
 import pl.edu.agh.framework.presentation.sharedViewModel
 import pl.edu.agh.framework.presentation.ui.common.UnexpectedErrorScreen
 import pl.edu.agh.implementation.presentation.viewmodel.CompanyViewModel
-import pl.edu.agh.implementation.presentation.viewmodel.UserViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.CurrentUserViewModel
 import pl.edu.agh.implementation.presentation.ui.client.ClientNewOrderScreen
 import pl.edu.agh.implementation.presentation.ui.client.ClientOrderDetailsScreen
 import pl.edu.agh.implementation.presentation.ui.client.ClientOrdersScreen
@@ -42,9 +42,9 @@ fun NavGraphBuilder.clientGraph(navController: NavHostController) {
         composable(ClientNavigation.OrdersList.route) {
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
             val ordersListViewModel = it.sharedViewModel<OrdersListViewModel>(navController)
-            val userViewModel = it.sharedViewModel<UserViewModel>(navController)
+            val currentUserViewModel = it.sharedViewModel<CurrentUserViewModel>(navController)
             LoggedInClientLayout(navController, companyViewModel) {
-                ClientOrdersScreen(navController, ordersListViewModel, userViewModel)
+                ClientOrdersScreen(navController, ordersListViewModel, currentUserViewModel)
             }
         }
         composable(ClientNavigation.OrderDetails.route) {

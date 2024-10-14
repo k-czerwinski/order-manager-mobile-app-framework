@@ -5,16 +5,16 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import pl.edu.agh.framework.data.remote.ApiClient
-import pl.edu.agh.implementation.data.dto.UserDTO
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.model.User
 import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
-import pl.edu.agh.implementation.data.getCurrentUser
+import pl.edu.agh.implementation.data.dto.UserDTO
+import pl.edu.agh.implementation.data.getUserDetails
 
-typealias UserStateSuccess = CommonViewModel.State.Success<User>
+typealias UserDetailsSuccessState = CommonViewModel.State.Success<User>
 
-class UserViewModel : CommonViewModel<User>() {
-    val userState: StateFlow<State<User>> = state
+class UserDetailsViewModel(private val userId: Int) : CommonViewModel<User>() {
+    val userDetailsState: StateFlow<State<User>> = state
 
     init {
         viewModelScope.launch {
@@ -26,11 +26,14 @@ class UserViewModel : CommonViewModel<User>() {
         try {
             state.value = State.Loading
             val companyId = EncryptedSharedPreferencesManager.getCompanyId()
-            val userRole = EncryptedSharedPreferencesManager.getUserRole()
-            val user = ApiClient.getCurrentUser(companyId, userRole).let(UserDTO::toModel)
-            state.value = State.Success(user)
+            val adminId = EncryptedSharedPreferencesManager.getUserId()
+            val userDTO = ApiClient.getUserDetails(companyId, adminId, userId)
+            state.value = State.Success(UserDTO.toModel(userDTO))
         } catch (e: Exception) {
-            Log.d("UserViewModel", "Error fetching orders: ${e.message}")
+            Log.d(
+                "OrdersViewModel",
+                "Error fetching user details, order id: ${userId}, message: ${e.message}"
+            )
             state.value = State.Error("Error fetching orders: ${e.message}")
         }
     }

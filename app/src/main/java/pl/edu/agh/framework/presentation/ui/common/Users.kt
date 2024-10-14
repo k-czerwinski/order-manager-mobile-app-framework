@@ -22,11 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pl.edu.agh.R
+import pl.edu.agh.framework.model.User
 import pl.edu.agh.framework.model.UserListViewItem
-
 
 @Composable
 fun UserListItem(user: UserListViewItem, onClick: () -> Unit) {
@@ -44,12 +45,19 @@ fun UserListItem(user: UserListViewItem, onClick: () -> Unit) {
         ) {
             Column {
                 Text(
-                    text = stringResource(R.string.user_identity_title, user.firstName, user.lastName),
+                    text = stringResource(
+                        R.string.user_identity_title,
+                        user.firstName,
+                        user.lastName
+                    ),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = stringResource(R.string.user_role_subtitle, stringResource(user.role.displayNameCode)),
+                    text = stringResource(
+                        R.string.user_role_subtitle,
+                        stringResource(user.role.displayNameCode)
+                    ),
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
@@ -74,7 +82,11 @@ fun UserList(users: List<UserListViewItem>, onUserClick: (user: UserListViewItem
 }
 
 @Composable
-fun UserListScreen(users: List<UserListViewItem>, onUserClick: (user: UserListViewItem) -> Unit) {
+fun UserListScreen(
+    users: List<UserListViewItem>,
+    onUserClick: (user: UserListViewItem) -> Unit,
+    bottomButton: @Composable () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -90,6 +102,61 @@ fun UserListScreen(users: List<UserListViewItem>, onUserClick: (user: UserListVi
             )
             Spacer(modifier = Modifier.height(16.dp))
             UserList(users, onUserClick = onUserClick)
+        }
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+        ) {
+            bottomButton()
+        }
+    }
+}
+
+@Composable
+fun UserDetails(user: User) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        InfoBlock(title = stringResource(R.string.user_info_first_name), content = user.firstName)
+        InfoBlock(title = stringResource(R.string.user_info_last_name), content = user.lastName)
+        InfoBlock(
+            title = stringResource(R.string.user_info_role),
+            content = stringResource(user.role.displayNameCode)
+        )
+        InfoBlock(title = stringResource(R.string.user_info_username), content = user.username)
+    }
+}
+
+@Composable
+fun InfoBlock(title: String, content: String) {
+    InfoBlock(title) {
+        Text(
+            text = content,
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 20.sp),
+            textAlign = TextAlign.Start,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun InfoBlock(title: String, content: @Composable () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        ) {
+            Text(text = title, style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp))
+            Spacer(modifier = Modifier.height(8.dp))
+            content()
         }
     }
 }

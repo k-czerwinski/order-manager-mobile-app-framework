@@ -8,6 +8,7 @@ import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.IllegalHeaderValueException
 import io.ktor.http.contentType
 import kotlinx.datetime.LocalDateTime
 import pl.edu.agh.framework.data.remote.ApiClient
@@ -20,6 +21,7 @@ import pl.edu.agh.implementation.data.dto.OrderCreateResponseDTO
 import pl.edu.agh.implementation.data.dto.OrderDTO
 import pl.edu.agh.implementation.data.dto.OrderListViewItemDTO
 import pl.edu.agh.implementation.data.dto.ProductDTO
+import pl.edu.agh.implementation.data.dto.UserCreateDTO
 import pl.edu.agh.implementation.data.dto.UserDTO
 import pl.edu.agh.implementation.data.dto.UserListViewItemDTO
 import pl.edu.agh.implementation.model.UserRole
@@ -186,6 +188,41 @@ suspend fun ApiClient.getUsers(
         else -> throw HttpResponseException(
             response.status,
             "Unexpected error fetching users list"
+        )
+    }
+}
+
+suspend fun ApiClient.getUserDetails(
+    companyId: Int,
+    adminId: Int,
+    userId: Int
+): UserDTO {
+    val response = authenticatedClient.get(
+        "$SERVER_URL/company/${companyId}" +
+                "/admin/${adminId}/user/${userId}"
+    )
+    Log.d("ApiClient", response.toString())
+    return when (response.status) {
+        HttpStatusCode.OK -> response.body()
+        else -> throw HttpResponseException(
+            response.status,
+            "Unexpected error fetching order details"
+        )
+    }
+}
+
+suspend fun ApiClient.addUser(companyId: Int, adminId: Int, user: UserCreateDTO): Int {
+    val response = authenticatedClient.post("$SERVER_URL/company/${companyId}/admin/${adminId}/user") {
+        setBody(user)
+        contentType(ContentType.Application.Json)
+    }
+    Log.d("ApiClient", response.toString())
+    return when (response.status) {
+        HttpStatusCode.Created -> response.headers["Location"]?.split("/user/")?.get(1)?.toInt()
+            ?: throw IllegalHeaderValueException("Location header is missing or invalid", 0)
+        else -> throw HttpResponseException(
+            response.status,
+            "Unexpected error creating user"
         )
     }
 }

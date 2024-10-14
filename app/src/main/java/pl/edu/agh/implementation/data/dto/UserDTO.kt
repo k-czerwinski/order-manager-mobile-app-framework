@@ -12,8 +12,7 @@ data class UserDTO(
     val lastName: String,
     val username: String,
     val role: String,
-    val companyId: Int,
-    val password: String? = null
+    val companyId: Int
 ) {
     companion object {
         private val userRoleParser = UserRoleDependencyInjector.getUserRoleParser()
@@ -23,12 +22,19 @@ data class UserDTO(
                 firstName = userDTO.firstName,
                 lastName = userDTO.lastName,
                 username = userDTO.username,
-                role = userRoleParser.valueOf(userDTO.role),
-                password = userDTO.password ?: ""
+                role = userRoleParser.valueOf(userDTO.role)
             )
         }
     }
 }
+
+data class UserCreateDTO(
+    val firstName: String,
+    val lastName: String,
+    val username: String,
+    val password: String,
+    val role: String
+)
 
 @Serializable
 data class UserListViewItemDTO(

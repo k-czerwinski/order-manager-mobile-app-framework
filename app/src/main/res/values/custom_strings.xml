@@ -51,4 +51,10 @@
     <string name="order_send_confirmation_dialog_title">Do you want to send this order?</string>
     <string name="order_send_confirmation_dialog_description">This operation cannot be undone. Order will be assigned to courier: %1s %2s.</string>
     <string name="order_choose_courier_title">Choose courier from the list below</string>
+    <string name="new_user_button">New user</string>
+    <string name="select_role_label">User role</string>
+    <string name="select_role_placeholder">Choose user role from dropdown</string>
+    <string name="add_user_button">Add user</string>
+    <string name="password_not_empty">Password must not be empty</string>
+    <string name="password_requirements">"Password must contain from 8 to 40 characters, 1 number, 1 uppercase letter, and 1 special character"</string>
 </resources>

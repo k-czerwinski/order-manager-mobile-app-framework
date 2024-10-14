@@ -12,6 +12,7 @@ import pl.edu.agh.framework.presentation.ui.common.CenteredCircularProgressIndic
 import pl.edu.agh.framework.presentation.ui.common.OrderDetailScreen
 import pl.edu.agh.framework.presentation.ui.common.OrderListScreen
 import pl.edu.agh.framework.presentation.ui.common.UserListScreen
+import pl.edu.agh.framework.presentation.ui.common.UserDetails
 import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
 import pl.edu.agh.implementation.presentation.navigation.AdminNavigation
 import pl.edu.agh.implementation.presentation.viewmodel.CourierListViewModel
@@ -24,18 +25,20 @@ import pl.edu.agh.implementation.presentation.viewmodel.OrdersListViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.UserListStateSuccess
 import pl.edu.agh.implementation.presentation.viewmodel.UserListViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.UserStateSuccess
-import pl.edu.agh.implementation.presentation.viewmodel.UserViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.CurrentUserViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.UserDetailsSuccessState
+import pl.edu.agh.implementation.presentation.viewmodel.UserDetailsViewModel
 
 @Composable
 fun AdminOrderListScreen(
     navController: NavController,
     ordersListViewModel: OrdersListViewModel,
-    userViewModel: UserViewModel
+    currentUserViewModel: CurrentUserViewModel
 ) {
     val ordersState by ordersListViewModel.ordersListState.collectAsState()
     val orders: List<OrderListViewItem> =
         (ordersState as? OrdersListStateSuccess)?.data ?: emptyList()
-    val userState by userViewModel.userState.collectAsState()
+    val userState by currentUserViewModel.userState.collectAsState()
     val userName = (userState as? UserStateSuccess)?.data?.firstName ?: "User"
 
     OrderListScreen(
@@ -114,5 +117,36 @@ fun AdminUserListScreen(
     val users: List<UserListViewItem> =
         (userListState as? UserListStateSuccess)?.data ?: emptyList()
 
-    UserListScreen(users, onUserClick = {})
+    UserListScreen(users, onUserClick = {
+        navController.navigate(AdminNavigation.createUserDetailsRoute(it.id))
+    }) {
+        UserListBottomButton(onClick = {
+            navController.navigate(AdminNavigation.CreateUser.route)
+        })
+    }
+}
+
+@Composable
+fun AdminUserDetailsScreen(
+    navController: NavHostController,
+    userId: Int
+) {
+    val currentUserViewModel: UserDetailsViewModel = viewModel(
+        factory = CommonViewModel.provideFactory {
+            UserDetailsViewModel(userId)
+        }
+    )
+    val userState by currentUserViewModel.userDetailsState.collectAsState()
+    when(userState) {
+        is UserDetailsSuccessState -> {
+            UserDetails((userState as UserDetailsSuccessState).data)
+        }
+        is CommonViewModel.State.Error -> {
+            navController.navigate(AdminNavigation.UnexpectedError.route)
+        }
+        is CommonViewModel.State.Loading -> {
+            CenteredCircularProgressIndicator()
+        }
+        is CommonViewModel.State.Empty -> {}
+    }
 }
