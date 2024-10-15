@@ -25,7 +25,6 @@ class OrderCreateViewModel : ViewModel() {
             val clientId = EncryptedSharedPreferencesManager.getUserId()
             val companyId = EncryptedSharedPreferencesManager.getCompanyId()
             val orderCreateDTO = OrderCreateDTO(
-                companyId,
                 products.map { OrderProductCreateDTO(it.key.id, it.value) },
                 clientId,
                 orderName
@@ -37,7 +36,7 @@ class OrderCreateViewModel : ViewModel() {
             }
 
             try {
-                val response = ApiClient.createOrder(orderCreateDTO)
+                val response = ApiClient.createOrder(orderCreateDTO, companyId)
                 _orderCreationState.value = OrderCreationState.Success(response.totalPrice)
             } catch (e: Exception) {
                 _orderCreationState.value = OrderCreationState.Error("Failed to create order")

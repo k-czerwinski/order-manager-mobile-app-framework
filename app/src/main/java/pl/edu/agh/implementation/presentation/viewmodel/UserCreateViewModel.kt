@@ -1,5 +1,6 @@
 package pl.edu.agh.implementation.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.ktor.http.HttpStatusCode
@@ -28,36 +29,39 @@ class UserCreateViewModel : ViewModel() {
         password: String
     ) {
         viewModelScope.launch {
-            try {
-                if (validatePassword(password) != null) {
-                    _userCreateState.value = UserCreateState.Error("Invalid password")
-                    return@launch
-                }
-                _userCreateState.value = UserCreateState.Loading
-                val companyId = EncryptedSharedPreferencesManager.getCompanyId()
-                val adminId = EncryptedSharedPreferencesManager.getUserId()
-                val user = UserCreateDTO(
-                    firstName = firstName,
-                    lastName = lastName,
-                    username = username,
-                    role = role.urlName,
-                    password = password)
 
+            if (validatePassword(password) != null) {
+                _userCreateState.value = UserCreateState.Error("Invalid password")
+                return@launch
+            }
+            _userCreateState.value = UserCreateState.Loading
+            val companyId = EncryptedSharedPreferencesManager.getCompanyId()
+            val adminId = EncryptedSharedPreferencesManager.getUserId()
+            val user = UserCreateDTO(
+                firstName = firstName,
+                lastName = lastName,
+                username = username,
+                role = role.name,
+                password = password
+            )
+            try {
                 val response = ApiClient.addUser(companyId, adminId, user)
                 _userCreateState.value = UserCreateState.Success(response)
             } catch (e: HttpResponseException) {
                 if (e.httpStatusCode == HttpStatusCode.Conflict) {
                     _userCreateState.value = UserCreateState.UserNameAlreadyTaken
                 } else {
+                    Log.d("HttpResponseException", e.message!!)
                     _userCreateState.value = UserCreateState.Error(e.message!!)
                 }
             } catch (e: Exception) {
+                Log.d("Exception", e.message!!)
                 _userCreateState.value = UserCreateState.Error(e.message!!)
             }
         }
     }
 
-//    if error exist then return error message code, to be displayed with stringResource()
+    //    if error exist then return error message code, to be displayed with stringResource()
     fun validatePassword(password: String): Int? {
         val passwordPattern = Pattern.compile(
             "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$"
@@ -66,6 +70,7 @@ class UserCreateViewModel : ViewModel() {
             password.isBlank() -> R.string.password_not_empty
             !passwordPattern.matcher(password)
                 .matches() -> R.string.password_requirements
+
             else -> null
         }
     }

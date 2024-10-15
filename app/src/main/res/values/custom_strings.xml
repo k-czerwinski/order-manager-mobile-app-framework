@@ -57,4 +57,11 @@
     <string name="add_user_button">Add user</string>
     <string name="password_not_empty">Password must not be empty</string>
     <string name="password_requirements">"Password must contain from 8 to 40 characters, 1 number, 1 uppercase letter, and 1 special character"</string>
+    <string name="username_already_taken">Username is already taken</string>
+    <string name="user_has_been_created_dialog_title">User has been created</string>
+    <string name="user_has_been_created_dialog_description">User has been created. Now you can login with created credentials</string>
+    <string name="user_could_not_be_created_dialog_title">Unexpected error when creating user</string>
+    <string name="user_could_not_be_created_dialog_description">Please try again. If this problem occurs please contact system administrator.</string>
+    <string name="go_to_user_details_button">To user details</string>
+    <string name="go_to_user_list_button">Back to user list</string>
 </resources>

@@ -102,10 +102,9 @@ suspend fun ApiClient.getProducts(companyId: Int, userRole: UserRole): List<Prod
     }
 }
 
-suspend fun ApiClient.createOrder(orderCreateDTO: OrderCreateDTO): OrderCreateResponseDTO {
+suspend fun ApiClient.createOrder(orderCreateDTO: OrderCreateDTO, companyId: Int): OrderCreateResponseDTO {
     val response = authenticatedClient.post(
-        "$SERVER_URL/company/${orderCreateDTO.companyId}" +
-                "/client/${orderCreateDTO.clientId}/order"
+        "$SERVER_URL/company/$companyId/client/${orderCreateDTO.clientId}/order"
     ) {
         contentType(ContentType.Application.Json)
         setBody(orderCreateDTO)

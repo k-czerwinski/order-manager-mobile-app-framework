@@ -28,6 +28,7 @@ data class UserDTO(
     }
 }
 
+@Serializable
 data class UserCreateDTO(
     val firstName: String,
     val lastName: String,
