@@ -197,6 +197,6 @@ fun ProductListScreen(
 }
 
 @Composable
-fun AddProductScreen(navController: NavHostController) {
-    AddProductForm(navController)
+fun AddProductScreen(navController: NavHostController, productListViewModel: ProductListViewModel) {
+    AddProductForm(navController, productListViewModel)
 }

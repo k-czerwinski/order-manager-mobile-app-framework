@@ -33,6 +33,7 @@ import pl.edu.agh.framework.presentation.ui.common.SelectableDropdown
 import pl.edu.agh.implementation.model.UserRole
 import pl.edu.agh.implementation.presentation.navigation.AdminNavigation
 import pl.edu.agh.implementation.presentation.viewmodel.UserCreateViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.UserListViewModel
 
 @Composable
 fun UserListBottomButton(onClick: () -> Unit) {
@@ -48,14 +49,16 @@ fun UserListBottomButton(onClick: () -> Unit) {
 
 @Composable
 fun AddUserScreen(
-    navController: NavController
+    navController: NavController,
+    userListViewModel: UserListViewModel
 ) {
-    AddUserForm(navController)
+    AddUserForm(navController, userListViewModel)
 }
 
 @Composable
 fun AddUserForm(
     navController: NavController,
+    userListViewModel: UserListViewModel,
     userCreateViewModel: UserCreateViewModel = viewModel()
 ) {
     val userCreateState by userCreateViewModel.userCreateState.collectAsState()
@@ -162,6 +165,7 @@ fun AddUserForm(
         when (userCreateState) {
             is UserCreateViewModel.UserCreateState.Success -> {
                 val userId = (userCreateState as UserCreateViewModel.UserCreateState.Success).userId
+                userListViewModel.loadUsers()
                 UserCreatedSuccessfullyDialog {
                     navController.navigate(AdminNavigation.createUserDetailsRoute(userId)) {
                         popUpTo(navController.currentBackStackEntry?.destination?.route ?: "") {

@@ -20,6 +20,10 @@ class ProductListViewModel : CommonListViewModel<Product>() {
     val productsListState: StateFlow<State<List<Product>>> = state
 
     init {
+        loadProducts()
+    }
+
+    fun loadProducts() {
         viewModelScope.launch {
             fetchData()
         }

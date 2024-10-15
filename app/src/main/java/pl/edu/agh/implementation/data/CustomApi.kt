@@ -13,8 +13,8 @@ import io.ktor.http.contentType
 import kotlinx.datetime.LocalDateTime
 import pl.edu.agh.framework.data.remote.ApiClient
 import pl.edu.agh.framework.data.remote.HttpResponseException
-import pl.edu.agh.framework.model.Company
 import pl.edu.agh.framework.model.UserRoleInterface
+import pl.edu.agh.implementation.data.dto.CompanyDTO
 import pl.edu.agh.implementation.data.dto.ExpectedDeliveryDateTimeDTO
 import pl.edu.agh.implementation.data.dto.OrderCreateDTO
 import pl.edu.agh.implementation.data.dto.OrderCreateResponseDTO
@@ -27,7 +27,7 @@ import pl.edu.agh.implementation.data.dto.UserDTO
 import pl.edu.agh.implementation.data.dto.UserListViewItemDTO
 import pl.edu.agh.implementation.model.UserRole
 
-suspend fun ApiClient.getCompany(companyId: Int): Company {
+suspend fun ApiClient.getCompany(companyId: Int): CompanyDTO {
     val response = authenticatedClient.get("$SERVER_URL/company/${companyId}")
     Log.d("ApiClient", response.toString())
     return when (response.status) {

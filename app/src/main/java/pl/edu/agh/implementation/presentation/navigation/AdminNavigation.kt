@@ -113,11 +113,12 @@ fun NavGraphBuilder.adminGraph(navController: NavHostController) {
 
         composable(AdminNavigation.CreateUser.route) {
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            val userListViewModel = it.sharedViewModel<UserListViewModel>(navController)
             LoggedInAdminLayout(
                 navController = navController,
                 companyViewModel = companyViewModel
             ) {
-                AddUserScreen(navController)
+                AddUserScreen(navController, userListViewModel)
             }
         }
 
@@ -134,11 +135,12 @@ fun NavGraphBuilder.adminGraph(navController: NavHostController) {
 
         composable(AdminNavigation.CreateProduct.route) {
             val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            val productListViewModel = it.sharedViewModel<ProductListViewModel>(navController)
             LoggedInAdminLayout(
                 navController = navController,
                 companyViewModel = companyViewModel
             ) {
-                AddProductScreen(navController)
+                AddProductScreen(navController, productListViewModel)
             }
         }
 

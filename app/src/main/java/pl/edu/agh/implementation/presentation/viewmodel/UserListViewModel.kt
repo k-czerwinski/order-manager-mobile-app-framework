@@ -26,7 +26,7 @@ open class UserListViewModel(private val requiredRole: UserRole? = null) :
         loadUsers()
     }
 
-    private fun loadUsers() {
+    fun loadUsers() {
         viewModelScope.launch {
             fetchData()
         }

@@ -30,6 +30,7 @@ import pl.edu.agh.framework.presentation.ui.common.DismissButtonDialog
 import pl.edu.agh.framework.presentation.ui.common.InputField
 import pl.edu.agh.implementation.presentation.navigation.AdminNavigation
 import pl.edu.agh.implementation.presentation.viewmodel.ProductCreateViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.ProductListViewModel
 import java.math.BigDecimal
 
 @Composable
@@ -47,6 +48,7 @@ fun CreateProductButton(onClick: () -> Unit) {
 @Composable
 fun AddProductForm(
     navController: NavController,
+    productListViewModel: ProductListViewModel,
     productCreateViewModel: ProductCreateViewModel = viewModel()
 ) {
     val productCreateState by productCreateViewModel.productCreateState.collectAsState()
@@ -62,7 +64,7 @@ fun AddProductForm(
 
     val isFormValid = name.isNotBlank() && name.length <= nameMaxLength
             && price.isNotBlank() && isPriceValid
-            && description.isNotBlank() && description.length <= descriptionMaxLength
+            && description.length <= descriptionMaxLength
 
     Column(
         modifier = Modifier
@@ -128,6 +130,7 @@ fun AddProductForm(
         when (productCreateState) {
             is ProductCreateViewModel.ProductCreateState.Success -> {
                 ProductCreatedSuccessfullyDialog(toProductList = {
+                    productListViewModel.loadProducts()
                     navController.navigate(AdminNavigation.ProductList.route) {
                         popUpTo(navController.currentBackStackEntry?.destination?.route ?: "") {
                             inclusive = true
