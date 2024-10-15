@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import pl.edu.agh.R
 import pl.edu.agh.framework.model.Product
 import pl.edu.agh.framework.presentation.ui.common.DismissButtonDialog
-import pl.edu.agh.framework.presentation.ui.common.ProductList
+import pl.edu.agh.framework.presentation.ui.common.SelectProductList
 
 @Composable
 fun CreateNewOrderScreen(
@@ -58,7 +58,7 @@ fun CreateNewOrderScreen(
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(8.dp))
-            ProductList(products, selectedProducts)
+            SelectProductList(products, selectedProducts)
         }
 
         Button(

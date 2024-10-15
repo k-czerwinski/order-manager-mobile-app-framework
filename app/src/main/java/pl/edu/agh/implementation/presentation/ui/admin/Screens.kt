@@ -1,16 +1,26 @@
 package pl.edu.agh.implementation.presentation.ui.admin
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import pl.edu.agh.framework.model.OrderListViewItem
+import pl.edu.agh.framework.model.Product
 import pl.edu.agh.framework.model.UserListViewItem
 import pl.edu.agh.framework.presentation.ui.common.CenteredCircularProgressIndicator
 import pl.edu.agh.framework.presentation.ui.common.OrderDetailScreen
 import pl.edu.agh.framework.presentation.ui.common.OrderListScreen
+import pl.edu.agh.framework.presentation.ui.common.ProductList
 import pl.edu.agh.framework.presentation.ui.common.UserListScreen
 import pl.edu.agh.framework.presentation.ui.common.UserDetails
 import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
@@ -26,6 +36,8 @@ import pl.edu.agh.implementation.presentation.viewmodel.UserListStateSuccess
 import pl.edu.agh.implementation.presentation.viewmodel.UserListViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.UserStateSuccess
 import pl.edu.agh.implementation.presentation.viewmodel.CurrentUserViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.ProductListStateSuccess
+import pl.edu.agh.implementation.presentation.viewmodel.ProductListViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.UserDetailsSuccessState
 import pl.edu.agh.implementation.presentation.viewmodel.UserDetailsViewModel
 
@@ -137,16 +149,54 @@ fun AdminUserDetailsScreen(
         }
     )
     val userState by currentUserViewModel.userDetailsState.collectAsState()
-    when(userState) {
+    when (userState) {
         is UserDetailsSuccessState -> {
             UserDetails((userState as UserDetailsSuccessState).data)
         }
+
         is CommonViewModel.State.Error -> {
             navController.navigate(AdminNavigation.UnexpectedError.route)
         }
+
         is CommonViewModel.State.Loading -> {
             CenteredCircularProgressIndicator()
         }
+
         is CommonViewModel.State.Empty -> {}
     }
+}
+
+@Composable
+fun ProductListScreen(
+    navController: NavHostController,
+    productListViewModel: ProductListViewModel
+) {
+    val productListState by productListViewModel.productsListState.collectAsState()
+    val products: List<Product> =
+        (productListState as? ProductListStateSuccess)?.data ?: emptyList()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            ProductList(products)
+        }
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+        ) {
+            CreateProductButton(onClick = {
+                navController.navigate(AdminNavigation.CreateProduct.route)
+            })
+        }
+    }
+}
+
+@Composable
+fun AddProductScreen(navController: NavHostController) {
+    AddProductForm(navController)
 }

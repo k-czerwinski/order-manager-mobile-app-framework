@@ -64,4 +64,16 @@
     <string name="user_could_not_be_created_dialog_description">Please try again. If this problem occurs please contact system administrator.</string>
     <string name="go_to_user_details_button">To user details</string>
     <string name="go_to_user_list_button">Back to user list</string>
+    <string name="new_product">New product</string>
+    <string name="product_has_been_created_dialog_title">Product Created</string>
+    <string name="product_has_been_created_dialog_description">The product has been successfully created.</string>
+    <string name="go_to_product_details_button">Go to Product Details</string>
+    <string name="product_could_not_be_created_dialog_title">Product Creation Failed</string>
+    <string name="product_could_not_be_created_dialog_description">The product could not be created. Please try again later.</string>
+    <string name="go_to_product_list_button">Go to Product List</string>
+    <string name="product_name">Product Name</string>
+    <string name="product_price_label">Product Price</string>
+    <string name="product_description">Product Description</string>
+    <string name="invalid_price_error">Invalid price format</string>
+    <string name="add_product_button">Add Product</string>
 </resources>

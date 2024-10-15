@@ -20,6 +20,7 @@ import pl.edu.agh.implementation.data.dto.OrderCreateDTO
 import pl.edu.agh.implementation.data.dto.OrderCreateResponseDTO
 import pl.edu.agh.implementation.data.dto.OrderDTO
 import pl.edu.agh.implementation.data.dto.OrderListViewItemDTO
+import pl.edu.agh.implementation.data.dto.ProductCreateDTO
 import pl.edu.agh.implementation.data.dto.ProductDTO
 import pl.edu.agh.implementation.data.dto.UserCreateDTO
 import pl.edu.agh.implementation.data.dto.UserDTO
@@ -222,6 +223,22 @@ suspend fun ApiClient.addUser(companyId: Int, adminId: Int, user: UserCreateDTO)
         else -> throw HttpResponseException(
             response.status,
             "Unexpected error creating user"
+        )
+    }
+}
+
+suspend fun ApiClient.addProduct(companyId: Int, adminId: Int, product: ProductCreateDTO) {
+    val response = authenticatedClient.post("$SERVER_URL/company/${companyId}/admin/${adminId}/product") {
+        setBody(product)
+        contentType(ContentType.Application.Json)
+    }
+    Log.d("ApiClient", response.toString())
+
+    return when (response.status) {
+        HttpStatusCode.Created -> {}
+        else -> throw HttpResponseException(
+            response.status,
+            "Unexpected error creating product"
         )
     }
 }

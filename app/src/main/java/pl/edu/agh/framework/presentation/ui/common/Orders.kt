@@ -400,11 +400,11 @@ fun ProductListPreview() {
         Product(3, "Product 3", BigDecimal(30.0), "Description 3")
     )
     val selectedProducts = remember { mutableStateMapOf<Product, Int>() }
-    ProductList(products, selectedProducts)
+    SelectProductList(products, selectedProducts)
 }
 
 @Composable
-fun ProductList(products: List<Product>, selectedProducts: MutableMap<Product, Int>) {
+fun SelectProductList(products: List<Product>, selectedProducts: MutableMap<Product, Int>) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(0.dp),

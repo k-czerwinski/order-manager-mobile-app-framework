@@ -22,3 +22,11 @@ data class ProductDTO(
         )
     }
 }
+
+@Serializable
+data class ProductCreateDTO(
+    val name: String,
+    @Serializable(with = BigDecimalSerializer::class)
+    val price: BigDecimal,
+    val description: String
+)

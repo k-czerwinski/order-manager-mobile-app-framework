@@ -142,6 +142,10 @@ fun AddUserForm(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally),
             onClick = {
                 userCreateViewModel.addUser(
                     firstName,
@@ -151,8 +155,7 @@ fun AddUserForm(
                     password
                 )
             },
-            enabled = isFormValid,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            enabled = isFormValid
         ) {
             Text(stringResource(R.string.add_user_button))
         }

@@ -11,6 +11,7 @@ import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.presentation.navigation.AuthNavigation
 import pl.edu.agh.framework.presentation.sharedViewModel
 import pl.edu.agh.framework.presentation.ui.common.UnexpectedErrorScreen
+import pl.edu.agh.implementation.presentation.ui.admin.AddProductScreen
 import pl.edu.agh.implementation.presentation.ui.admin.AddUserScreen
 import pl.edu.agh.implementation.presentation.ui.admin.AdminOrderDetailsScreen
 import pl.edu.agh.implementation.presentation.ui.admin.AdminOrderListScreen
@@ -18,12 +19,14 @@ import pl.edu.agh.implementation.presentation.ui.admin.AdminSendOrderScreen
 import pl.edu.agh.implementation.presentation.ui.admin.AdminUserDetailsScreen
 import pl.edu.agh.implementation.presentation.ui.admin.AdminUserListScreen
 import pl.edu.agh.implementation.presentation.ui.admin.LoggedInAdminLayout
+import pl.edu.agh.implementation.presentation.ui.admin.ProductListScreen
 import pl.edu.agh.implementation.presentation.ui.courier.LoggedInCourierLayout
 import pl.edu.agh.implementation.presentation.viewmodel.CompanyViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.CourierListViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.OrdersListViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.UserListViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.CurrentUserViewModel
+import pl.edu.agh.implementation.presentation.viewmodel.ProductListViewModel
 
 enum class AdminNavigation(route: String) {
     OrderList("order_list"),
@@ -115,6 +118,27 @@ fun NavGraphBuilder.adminGraph(navController: NavHostController) {
                 companyViewModel = companyViewModel
             ) {
                 AddUserScreen(navController)
+            }
+        }
+
+        composable(AdminNavigation.ProductList.route) {
+            val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            val productListViewModel = it.sharedViewModel<ProductListViewModel>(navController)
+            LoggedInAdminLayout(
+                navController = navController,
+                companyViewModel = companyViewModel
+            ) {
+                ProductListScreen(navController, productListViewModel)
+            }
+        }
+
+        composable(AdminNavigation.CreateProduct.route) {
+            val companyViewModel = it.sharedViewModel<CompanyViewModel>(navController)
+            LoggedInAdminLayout(
+                navController = navController,
+                companyViewModel = companyViewModel
+            ) {
+                AddProductScreen(navController)
             }
         }
 
