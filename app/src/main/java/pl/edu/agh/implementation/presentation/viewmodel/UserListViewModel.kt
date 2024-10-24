@@ -7,8 +7,8 @@ import kotlinx.coroutines.launch
 import pl.edu.agh.framework.data.remote.ApiClient
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.model.UserListViewItem
-import pl.edu.agh.framework.presentation.viewmodel.CommonListViewModel
-import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
+import pl.edu.agh.framework.viewmodel.CommonListViewModel
+import pl.edu.agh.framework.viewmodel.CommonViewModel
 import pl.edu.agh.implementation.data.dto.UserListViewItemDTO
 import pl.edu.agh.implementation.data.getUsers
 import pl.edu.agh.implementation.model.UserRole

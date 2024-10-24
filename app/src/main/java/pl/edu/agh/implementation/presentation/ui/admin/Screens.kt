@@ -23,7 +23,7 @@ import pl.edu.agh.framework.presentation.ui.common.OrderListScreen
 import pl.edu.agh.framework.presentation.ui.common.ProductList
 import pl.edu.agh.framework.presentation.ui.common.UserListScreen
 import pl.edu.agh.framework.presentation.ui.common.UserDetails
-import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
+import pl.edu.agh.framework.viewmodel.CommonViewModel
 import pl.edu.agh.implementation.presentation.navigation.AdminNavigation
 import pl.edu.agh.implementation.presentation.viewmodel.CourierListViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.OrderDetailsStateError

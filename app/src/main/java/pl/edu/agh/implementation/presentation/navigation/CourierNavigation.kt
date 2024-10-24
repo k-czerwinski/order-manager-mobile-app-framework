@@ -9,7 +9,7 @@ import pl.edu.agh.framework.data.remote.ApiClient
 import pl.edu.agh.framework.data.remote.ApiClient.logout
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.presentation.navigation.AuthNavigation
-import pl.edu.agh.framework.presentation.sharedViewModel
+import pl.edu.agh.framework.viewmodel.sharedViewModel
 import pl.edu.agh.framework.presentation.ui.common.UnexpectedErrorScreen
 import pl.edu.agh.implementation.presentation.viewmodel.CompanyViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.CurrentUserViewModel

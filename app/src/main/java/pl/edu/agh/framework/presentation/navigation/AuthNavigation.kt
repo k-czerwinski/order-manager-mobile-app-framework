@@ -7,11 +7,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
-import pl.edu.agh.framework.presentation.sharedViewModel
+import pl.edu.agh.framework.viewmodel.sharedViewModel
 import pl.edu.agh.framework.presentation.ui.common.LoginInvalidCredentialsScreen
 import pl.edu.agh.framework.presentation.ui.common.LoginScreen
 import pl.edu.agh.framework.presentation.ui.common.LoginUnknownErrorScreen
-import pl.edu.agh.framework.presentation.viewmodel.LoginViewModel
+import pl.edu.agh.framework.viewmodel.LoginViewModel
 
 enum class AuthNavigation(private val _route: String) {
     LoginStart("login_start"),

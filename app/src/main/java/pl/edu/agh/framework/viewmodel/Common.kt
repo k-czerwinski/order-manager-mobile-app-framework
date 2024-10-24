@@ -1,4 +1,4 @@
-package pl.edu.agh.framework.presentation
+package pl.edu.agh.framework.viewmodel
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

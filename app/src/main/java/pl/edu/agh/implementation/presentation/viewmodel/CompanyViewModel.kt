@@ -7,7 +7,7 @@ import kotlinx.coroutines.launch
 import pl.edu.agh.framework.data.remote.ApiClient
 import pl.edu.agh.framework.model.Company
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
-import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
+import pl.edu.agh.framework.viewmodel.CommonViewModel
 import pl.edu.agh.implementation.data.dto.CompanyDTO
 import pl.edu.agh.implementation.data.getCompany
 

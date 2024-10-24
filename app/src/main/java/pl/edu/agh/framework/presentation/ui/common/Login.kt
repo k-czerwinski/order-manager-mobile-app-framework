@@ -33,8 +33,8 @@ import androidx.navigation.NavController
 
 import pl.edu.agh.R
 import pl.edu.agh.framework.presentation.navigation.navigateOnLoginState
-import pl.edu.agh.framework.presentation.viewmodel.LoginViewModel
-import pl.edu.agh.framework.presentation.viewmodel.LoginViewModel.LoginState.*
+import pl.edu.agh.framework.viewmodel.LoginViewModel
+import pl.edu.agh.framework.viewmodel.LoginViewModel.LoginState.*
 
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel = LoginViewModel()) {

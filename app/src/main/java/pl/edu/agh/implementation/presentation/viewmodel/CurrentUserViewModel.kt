@@ -8,7 +8,7 @@ import pl.edu.agh.framework.data.remote.ApiClient
 import pl.edu.agh.implementation.data.dto.UserDTO
 import pl.edu.agh.framework.data.storage.EncryptedSharedPreferencesManager
 import pl.edu.agh.framework.model.User
-import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
+import pl.edu.agh.framework.viewmodel.CommonViewModel
 import pl.edu.agh.implementation.data.getCurrentUser
 
 typealias UserStateSuccess = CommonViewModel.State.Success<User>

@@ -1,4 +1,4 @@
-package pl.edu.agh.framework.presentation.viewmodel
+package pl.edu.agh.framework.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

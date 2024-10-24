@@ -18,7 +18,7 @@ import pl.edu.agh.framework.model.OrderListViewItem
 import pl.edu.agh.framework.presentation.ui.common.CenteredCircularProgressIndicator
 import pl.edu.agh.framework.presentation.ui.common.OrderDetailScreen
 import pl.edu.agh.framework.presentation.ui.common.OrderListScreen
-import pl.edu.agh.framework.presentation.viewmodel.CommonViewModel
+import pl.edu.agh.framework.viewmodel.CommonViewModel
 import pl.edu.agh.implementation.presentation.viewmodel.UserStateSuccess
 import pl.edu.agh.implementation.presentation.viewmodel.CurrentUserViewModel
 import pl.edu.agh.implementation.presentation.navigation.ClientNavigation
