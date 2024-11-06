@@ -26,11 +26,11 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
+    darkTheme: Boolean = isSystemInDarkTheme(), // can be overridden by user config
+    dynamicColor: Boolean = false, // can be overridden by user config
     darkColorScheme: ColorScheme = DarkColorScheme, // can be overridden by user config
     lightColorScheme: ColorScheme = LightColorScheme, // can be overridden by user config
-    typography: Typography = Typography,
+    typography: Typography = Typography, // can be overridden by user config
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

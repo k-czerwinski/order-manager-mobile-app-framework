@@ -19,7 +19,7 @@
     <string name="order_confirmed_dialog_description">Order has been successfully created. We will soon provide you with further updates.</string>
     <string name="order_dialog_to_list_button">Back to orders</string>
     <!-- COURIER STRINGS -->
-    <string name="courier_role_display_name">Deliveryman</string>
+    <string name="courier_role_display_name">Courier</string>
     <string name="courier_set_delivered_button">Set delivered</string>
     <string name="courier_update_expected_delivery_button">Set expected delivery</string>
     <string name="order_set_delivered_alert_dialog_title">Do you want to set this order as delivered?</string>

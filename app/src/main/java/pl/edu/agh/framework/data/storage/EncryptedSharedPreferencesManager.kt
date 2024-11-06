@@ -8,6 +8,7 @@ import pl.edu.agh.framework.data.remote.dto.LoginResponse
 import pl.edu.agh.framework.data.remote.dto.RefreshTokenResponse
 import pl.edu.agh.framework.model.UserRoleInterface
 import pl.edu.agh.framework.model.UserRoleDependencyInjector
+import pl.edu.agh.framework.model.UserRoleParserInterface
 
 object EncryptedSharedPreferencesManager {
 
@@ -17,8 +18,7 @@ object EncryptedSharedPreferencesManager {
     private const val USER_ID_KEY = "user_id"
     private const val USER_ROLE_KEY = "user_role"
     private const val COMPANY_ID_KEY = "company_id"
-    private val userRoleParser = UserRoleDependencyInjector.getUserRoleParser()
-
+    private lateinit var userRoleParser: UserRoleParserInterface
     private lateinit var sharedPreferences: SharedPreferences
 
     fun initialize(context: Context) {
@@ -35,6 +35,7 @@ object EncryptedSharedPreferencesManager {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
         }
+        userRoleParser = UserRoleDependencyInjector.getUserRoleParser()
     }
 
     fun saveLoggedInUser(loginResponse: LoginResponse) {
@@ -90,19 +91,6 @@ object EncryptedSharedPreferencesManager {
         return userRoleParser.valueOf(getStringProperty(USER_ROLE_KEY))
     }
 
-    @Suppress("Unused")
-    internal fun saveCustomProperty(key: String, value: String) {
-        if (key == ACCESS_TOKEN_KEY || key == REFRESH_TOKEN_KEY || key == USER_ID_KEY || key == USER_ROLE_KEY || key == COMPANY_ID_KEY) {
-            throw IllegalArgumentException("Cannot override property for key: $key")
-        }
-        saveProperty(key, value)
-    }
-
-    @Suppress("Unused")
-    internal fun getCustomProperty(key: String): String {
-        return getStringProperty(key)
-    }
-
     fun eraseAllData() {
         checkInitialized()
         sharedPreferences.edit().clear().apply()
@@ -128,7 +116,11 @@ object EncryptedSharedPreferencesManager {
 
     private fun getIntProperty(key: String): Int {
         checkInitialized()
-        return sharedPreferences.getInt(key, Int.MIN_VALUE)
+        val value = sharedPreferences.getInt(key, Int.MIN_VALUE)
+        if (value == Int.MIN_VALUE) {
+            throw IllegalStateException("Property not found: $key")
+        }
+        return value
     }
 
     private fun checkInitialized() {

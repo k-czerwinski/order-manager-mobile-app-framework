@@ -3,6 +3,7 @@ package pl.edu.agh.framework.data.remote
 import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
@@ -31,33 +32,38 @@ object ApiClient {
     private val REFRESH_TOKEN_URL = SERVER_URL + BuildConfig.REFRESH_TOKEN_PATH
     private val LOGOUT_URL = SERVER_URL + BuildConfig.LOGOUT_PATH
 
-    internal val anonymousClient = HttpClient(Android) {
-        install(ContentNegotiation) {
-            json()
-        }
-    }
-    internal val authenticatedClient = HttpClient(Android) {
-        install(ContentNegotiation) {
-            json()
-        }
-        install(Auth) {
-            bearer {
-                loadTokens {
-                    BearerTokens(
-                        accessToken = EncryptedSharedPreferencesManager.getAccessToken(),
-                        refreshToken = EncryptedSharedPreferencesManager.getRefreshToken()
-                    )
-                }
-                refreshTokens {
-                    val oldRefreshToken = EncryptedSharedPreferencesManager.getRefreshToken()
+    internal lateinit var anonymousClient: HttpClient
+    internal lateinit var authenticatedClient: HttpClient
 
-                    val refreshTokenResponse =
-                        refreshToken(oldRefreshToken)
-                    EncryptedSharedPreferencesManager.saveRefreshedTokens(refreshTokenResponse)
-                    BearerTokens(
-                        accessToken = refreshTokenResponse.accessToken,
-                        refreshToken = refreshTokenResponse.refreshToken
-                    )
+    fun initialize(clientEngine: HttpClientEngine = Android.create()) {
+        anonymousClient  = HttpClient(clientEngine) {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+        authenticatedClient = HttpClient(clientEngine) {
+            install(ContentNegotiation) {
+                json()
+            }
+            install(Auth) {
+                bearer {
+                    loadTokens {
+                        BearerTokens(
+                            accessToken = EncryptedSharedPreferencesManager.getAccessToken(),
+                            refreshToken = EncryptedSharedPreferencesManager.getRefreshToken()
+                        )
+                    }
+                    refreshTokens {
+                        val oldRefreshToken = EncryptedSharedPreferencesManager.getRefreshToken()
+
+                        val refreshTokenResponse =
+                            refreshToken(oldRefreshToken)
+                        EncryptedSharedPreferencesManager.saveRefreshedTokens(refreshTokenResponse)
+                        BearerTokens(
+                            accessToken = refreshTokenResponse.accessToken,
+                            refreshToken = refreshTokenResponse.refreshToken
+                        )
+                    }
                 }
             }
         }

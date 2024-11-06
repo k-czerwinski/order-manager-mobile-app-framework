@@ -12,7 +12,6 @@ import pl.edu.agh.implementation.data.dto.CompanyDTO
 import pl.edu.agh.implementation.data.getCompany
 
 typealias CompanySuccessState = CommonViewModel.State.Success<Company>
-
 class CompanyViewModel : CommonViewModel<Company>() {
     val companyState: StateFlow<State<Company>> = state
 
