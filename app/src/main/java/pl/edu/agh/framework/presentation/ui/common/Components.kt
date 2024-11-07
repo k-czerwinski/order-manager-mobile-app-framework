@@ -39,11 +39,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import pl.edu.agh.R
 
 @Composable
 fun AppScreen(topBar: @Composable () -> Unit, content: @Composable () -> Unit) {
@@ -53,6 +56,7 @@ fun AppScreen(topBar: @Composable () -> Unit, content: @Composable () -> Unit) {
             Box(
                 modifier = Modifier
                     .padding(paddingValues)
+                    .testTag("appScreenBox")
                     .fillMaxSize()
             ) {
                 content()
@@ -105,7 +109,8 @@ fun BackNavigationIcon(navController: NavController) {
         IconButton(onClick = { navController.popBackStack() }) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Previous screen"
+                contentDescription = "Previous screen",
+                modifier = Modifier.testTag("backNavigationIcon")
             )
         }
     }
@@ -117,7 +122,9 @@ fun CenteredCircularProgressIndicator() {
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(
+            modifier = Modifier.testTag("centeredCircularProgressIndicator")
+        )
     }
 }
 
@@ -133,12 +140,12 @@ fun UnexpectedErrorScreen() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Oops! Something went wrong.",
+                text = stringResource(R.string.smth_went_wrong),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             Text(
-                text = "We couldn't process your request. Please try again later.",
+                text = stringResource(R.string.request_try_again),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(bottom = 24.dp)
             )
@@ -158,7 +165,8 @@ fun DismissButtonDialog(
         icon = {
             Icon(
                 painterResource(icon),
-                contentDescription = title
+                contentDescription = title,
+                modifier = Modifier.testTag("dismissButtonDialogIcon")
             )
         },
         title = {
@@ -205,13 +213,13 @@ fun InputField(
     )
     if (!firstTouched.value && value.length < minLength) {
         Text(
-            "This field must have at least $minLength characters",
+            stringResource(R.string.min_length_text_validation_message, minLength),
             color = MaterialTheme.colorScheme.error
         )
     }
     if (!firstTouched.value && value.length > maxLength) {
         Text(
-            "This field must have at most $maxLength characters",
+            stringResource(R.string.max_length_text_validation_message, maxLength),
             color = MaterialTheme.colorScheme.error
         )
     }
@@ -236,7 +244,8 @@ fun <T> SelectableDropdown(selectedEntry: String, onEntrySelected: (T) -> Unit, 
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { expanded = true },
+                .clickable { expanded = true }
+                .testTag("selectableDropdownEntryField"),
             colors = OutlinedTextFieldDefaults.colors(
                 disabledTextColor = MaterialTheme.colorScheme.onSurface,
                 disabledContainerColor = Color.Transparent,

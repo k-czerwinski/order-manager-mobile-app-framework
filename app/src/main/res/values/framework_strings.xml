@@ -33,4 +33,8 @@
     <string name="user_info_role">Role</string>
     <string name="user_info_username">Username</string>
     <string name="user_info_password">Password</string>
+    <string name="min_length_text_validation_message">This field must have at least %1$s characters</string>
+    <string name="max_length_text_validation_message">This field must have at most %1$s characters</string>
+    <string name="smth_went_wrong">Oops! Something went wrong.</string>
+    <string name="request_try_again">We couldn\'t process your request. Please try again later.</string>
 </resources>
