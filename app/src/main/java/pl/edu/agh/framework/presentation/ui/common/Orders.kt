@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -96,7 +97,8 @@ fun OrderStatusWithDescription(status: OrderStatus) {
 @Composable
 fun OrderListItem(order: OrderListViewItem, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .testTag("orderListViewItem"),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         onClick = onClick
     ) {
@@ -142,7 +144,7 @@ fun OrdersList(orders: List<OrderListViewItem>, navigateToOrderDetails: (orderId
 @Composable
 fun OrderListGreetings(userName: String) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().testTag("orderListGreetings"),
         horizontalAlignment = Alignment.Start
     ) {
         Text(
@@ -213,7 +215,7 @@ fun OrderDetailScreen(order: Order, actionButtons: @Composable () -> Unit) {
 @Composable
 fun ProductOrderList(products: List<ProductOrder>) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().testTag("productOrderList"),
         contentPadding = PaddingValues(0.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -227,7 +229,8 @@ fun ProductOrderList(products: List<ProductOrder>) {
 fun OrderSummary(order: Order) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .testTag("orderSummary"),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -413,7 +416,7 @@ fun SelectProductList(products: List<Product>, selectedProducts: MutableMap<Prod
         items(products) { product ->
             ProductItem(product, onQuantityChange = {
                 onProductQuantityChange(selectedProducts, product, it)
-            })
+            }, quantity = selectedProducts[product] ?: 0)
         }
     }
 }
