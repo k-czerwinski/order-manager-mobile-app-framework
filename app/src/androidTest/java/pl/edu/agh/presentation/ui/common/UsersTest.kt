@@ -1,3 +1,5 @@
+package pl.edu.agh.presentation.ui.common
+
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +30,7 @@ import pl.edu.agh.framework.presentation.ui.common.UserListItem
 import pl.edu.agh.framework.presentation.ui.common.UserListScreen
 import pl.edu.agh.implementation.model.UserRoleParserInterfaceImpl
 import pl.edu.agh.implementation.presentation.navigation.CustomNavigation
+import pl.edu.agh.setPrivateField
 
 @RunWith(AndroidJUnit4::class)
 class UsersTest {
@@ -35,7 +38,7 @@ class UsersTest {
         @BeforeClass
         @JvmStatic
         fun setupClass() {
-            UserRoleDependencyInjector.registerUserRoleParser(UserRoleParserInterfaceImpl)
+            setPrivateField(UserRoleDependencyInjector, "userRoleParserInterface", UserRoleParserInterfaceImpl)
             val context = InstrumentationRegistry.getInstrumentation().targetContext
             EncryptedSharedPreferencesManager.initialize(context)
         }
@@ -189,9 +192,12 @@ class UsersTest {
             UserDetails(user = user)
         }
         // assert
-        composeTestRule.onNodeWithText("First Name: John").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Last Name: Doe").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Username: john_doe").assertIsDisplayed()
+        composeTestRule.onNodeWithText("First name").assertIsDisplayed()
+        composeTestRule.onNodeWithText("John").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Last name").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Doe").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Username").assertIsDisplayed()
+        composeTestRule.onNodeWithText("john_doe").assertIsDisplayed()
     }
 
     @Test

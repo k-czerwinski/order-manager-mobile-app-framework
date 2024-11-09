@@ -163,7 +163,7 @@ fun AddProductForm(
 @Composable
 fun ProductCreatedSuccessfullyDialog(toProductList: () -> Unit) {
     DismissButtonDialog(
-        R.drawable.ic_action_completed, // Adjust this drawable resource if needed
+        R.drawable.ic_action_completed,
         stringResource(R.string.product_has_been_created_dialog_title),
         stringResource(R.string.product_has_been_created_dialog_description),
         toProductList,
@@ -174,7 +174,7 @@ fun ProductCreatedSuccessfullyDialog(toProductList: () -> Unit) {
 @Composable
 fun ProductCouldNotBeCreatedDialog(toProductList: () -> Unit) {
     DismissButtonDialog(
-        R.drawable.ic_error, // Adjust this drawable resource if needed
+        R.drawable.ic_error,
         stringResource(R.string.product_could_not_be_created_dialog_title),
         stringResource(R.string.product_could_not_be_created_dialog_description),
         toProductList,

@@ -24,13 +24,14 @@ import pl.edu.agh.framework.presentation.navigation.authGraph
 import pl.edu.agh.framework.presentation.navigation.navigateOnLoginState
 import pl.edu.agh.framework.viewmodel.LoginViewModel
 import pl.edu.agh.implementation.model.UserRoleParserInterfaceImpl
+import pl.edu.agh.setPrivateField
 
-class NavigationTest {
+class LoginNavigationTest {
     companion object {
         @BeforeClass
         @JvmStatic
         fun setupClass() {
-            UserRoleDependencyInjector.registerUserRoleParser(UserRoleParserInterfaceImpl)
+            setPrivateField(UserRoleDependencyInjector, "userRoleParserInterface", UserRoleParserInterfaceImpl)
             val context = InstrumentationRegistry.getInstrumentation().targetContext
             EncryptedSharedPreferencesManager.initialize(context)
         }
@@ -54,13 +55,13 @@ class NavigationTest {
     }
 
     @Test
-    fun testInitialNavigationToLoginStart() {
+    fun `test initial navigation to login start screen`() {
         // assert
         composeTestRule.onNodeWithTag("loginScreen").assertIsDisplayed()
     }
 
     @Test
-    fun testNavigateToInvalidCredentials() {
+    fun `test navigate to invalid credentials screen`() {
         // act
         composeTestRule.runOnIdle {
             val loginState = LoginViewModel.LoginState.InvalidCredentials("Error message")
@@ -71,7 +72,7 @@ class NavigationTest {
     }
 
     @Test
-    fun testNavigateToUnexpectedError() {
+    fun `test navigate to unexpected error screen`() {
         // act
         composeTestRule.runOnIdle {
             val loginState = LoginViewModel.LoginState.UnexpectedError("Error message")
@@ -82,18 +83,18 @@ class NavigationTest {
     }
 
     @Test
-    fun testNavigateToSuccessScreen() {
+    fun `test navigate to success screen`() {
         // act
         composeTestRule.runOnIdle {
             val loginState = LoginViewModel.LoginState.Success(userRole = UserRoleTest.ADMIN)
-            navigateOnLoginState(navController, loginState) }
-
+            navigateOnLoginState(navController, loginState)
+        }
         // assert
         composeTestRule.onNodeWithTag("firstScreen").assertIsDisplayed()
     }
 
     @Test
-    fun testBackNavigationAfterError() {
+    fun `test back navigation after error`() {
         // act
         composeTestRule.runOnIdle {
             navController.navigate(AuthNavigation.InvalidCredentials.route)
@@ -105,7 +106,7 @@ class NavigationTest {
     }
 
     @Test
-    fun testPopUpToAuthBaseRoute() {
+    fun `test pop up to auth base route`() {
         // act
         composeTestRule.runOnIdle {
             val loginState = LoginViewModel.LoginState.Success(userRole = UserRoleTest.ADMIN)

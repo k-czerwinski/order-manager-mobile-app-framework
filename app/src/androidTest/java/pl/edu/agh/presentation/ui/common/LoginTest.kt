@@ -1,3 +1,5 @@
+package pl.edu.agh.presentation.ui.common
+
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.navigation.compose.rememberNavController
@@ -19,6 +21,7 @@ import pl.edu.agh.framework.presentation.ui.common.LoginUnknownErrorScreen
 import pl.edu.agh.framework.viewmodel.LoginViewModel
 import pl.edu.agh.framework.viewmodel.LoginViewModel.LoginState.*
 import pl.edu.agh.implementation.model.UserRoleParserInterfaceImpl
+import pl.edu.agh.setPrivateField
 
 @RunWith(AndroidJUnit4::class)
 class LoginTest {
@@ -26,7 +29,7 @@ class LoginTest {
         @BeforeClass
         @JvmStatic
         fun setupClass() {
-            UserRoleDependencyInjector.registerUserRoleParser(UserRoleParserInterfaceImpl)
+            setPrivateField(UserRoleDependencyInjector, "userRoleParserInterface", UserRoleParserInterfaceImpl)
             val context = InstrumentationRegistry.getInstrumentation().targetContext
             EncryptedSharedPreferencesManager.initialize(context)
         }

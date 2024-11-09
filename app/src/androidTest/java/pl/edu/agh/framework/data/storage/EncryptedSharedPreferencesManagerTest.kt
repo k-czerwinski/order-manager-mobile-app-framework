@@ -12,6 +12,7 @@ import pl.edu.agh.framework.data.remote.dto.RefreshTokenResponse
 import pl.edu.agh.framework.model.UserRoleDependencyInjector
 import pl.edu.agh.implementation.model.UserRole
 import pl.edu.agh.implementation.model.UserRoleParserInterfaceImpl
+import pl.edu.agh.setPrivateField
 
 @RunWith(JUnit4::class)
 class EncryptedSharedPreferencesManagerTest {
@@ -22,7 +23,7 @@ class EncryptedSharedPreferencesManagerTest {
         @BeforeClass
         @JvmStatic
         fun setupClass() {
-            UserRoleDependencyInjector.registerUserRoleParser(UserRoleParserInterfaceImpl)
+            setPrivateField(UserRoleDependencyInjector, "userRoleParserInterface", UserRoleParserInterfaceImpl)
             val context = InstrumentationRegistry.getInstrumentation().targetContext
             EncryptedSharedPreferencesManager.initialize(context)
         }

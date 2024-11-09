@@ -1,3 +1,5 @@
+package pl.edu.agh.presentation.ui.common
+
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -22,6 +24,7 @@ import pl.edu.agh.framework.presentation.ui.common.InputField
 import pl.edu.agh.framework.presentation.ui.common.SelectableDropdown
 import pl.edu.agh.framework.presentation.ui.common.UnexpectedErrorScreen
 import pl.edu.agh.implementation.model.UserRoleParserInterfaceImpl
+import pl.edu.agh.setPrivateField
 
 @RunWith(AndroidJUnit4::class)
 class ComponentsTest {
@@ -29,7 +32,7 @@ class ComponentsTest {
         @BeforeClass
         @JvmStatic
         fun setupClass() {
-            UserRoleDependencyInjector.registerUserRoleParser(UserRoleParserInterfaceImpl)
+            setPrivateField(UserRoleDependencyInjector, "userRoleParserInterface", UserRoleParserInterfaceImpl)
             val context = InstrumentationRegistry.getInstrumentation().targetContext
             EncryptedSharedPreferencesManager.initialize(context)
         }
@@ -39,7 +42,7 @@ class ComponentsTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun testAppScreenDisplaysTopBarAndContent() {
+    fun appScreen_displaysTopBarAndContent() {
         // arrange
         val topBarText = "Top Bar Title"
         val contentText = "Main Content"

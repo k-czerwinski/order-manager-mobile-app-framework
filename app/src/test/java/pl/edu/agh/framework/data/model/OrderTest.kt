@@ -8,7 +8,7 @@ import pl.edu.agh.framework.model.OrderStatus
 import java.math.BigDecimal
 
 class OrderTest{
-    val order = Order(
+    private val order = Order(
         id = 1,
         companyId = 1,
         products = emptyList(),

@@ -1,3 +1,5 @@
+package pl.edu.agh.presentation.ui.common
+
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -29,6 +31,7 @@ import pl.edu.agh.framework.presentation.ui.common.ProductItem
 import pl.edu.agh.framework.presentation.ui.common.ProductOrderItem
 import pl.edu.agh.framework.presentation.ui.common.SelectProductList
 import pl.edu.agh.implementation.model.UserRoleParserInterfaceImpl
+import pl.edu.agh.setPrivateField
 import java.math.BigDecimal
 
 @RunWith(AndroidJUnit4::class)
@@ -37,7 +40,7 @@ class OrdersTest {
         @BeforeClass
         @JvmStatic
         fun setupClass() {
-            UserRoleDependencyInjector.registerUserRoleParser(UserRoleParserInterfaceImpl)
+            setPrivateField(UserRoleDependencyInjector, "userRoleParserInterface", UserRoleParserInterfaceImpl)
             val context = InstrumentationRegistry.getInstrumentation().targetContext
             EncryptedSharedPreferencesManager.initialize(context)
         }
