@@ -14,6 +14,7 @@ securityCrypto = "1.1.0-alpha06"
 material3 = "1.3.1"
 kotlinxDatetime = "0.6.1"
 mockk_version = "1.13.3"
+navigationTesting = "2.8.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +43,7 @@ ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor"}
 mockk-android = {module = "io.mockk:mockk-android", version.ref = "mockk_version" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref="kotlinxDatetime"}
+androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationTesting" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

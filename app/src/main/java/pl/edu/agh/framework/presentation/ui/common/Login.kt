@@ -50,7 +50,8 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = LoginV
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .testTag("loginScreen"),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -114,7 +115,8 @@ fun LoginInvalidCredentialsScreen(onTryAgain: () -> Unit) {
     LoginErrorScreen(
         errorMessage = stringResource(R.string.login_invalid_credentials),
         errorDescription = stringResource(R.string.login_contact_administrator),
-        onTryAgain = onTryAgain
+        onTryAgain = onTryAgain,
+        testTag = "loginInvalidCredentialsScreen"
     )
 }
 
@@ -151,17 +153,19 @@ fun LoginUnknownErrorScreen(onTryAgain: () -> Unit) {
     LoginErrorScreen(
         errorMessage = stringResource(R.string.login_unexpected_error),
         errorDescription = stringResource(R.string.login_contact_administrator),
-        onTryAgain = onTryAgain
+        onTryAgain = onTryAgain,
+        testTag = "loginUnknownErrorScreen"
     )
 }
 
 @Composable
-fun LoginErrorScreen(errorMessage: String, errorDescription: String, onTryAgain: () -> Unit) {
+fun LoginErrorScreen(errorMessage: String, errorDescription: String, onTryAgain: () -> Unit, testTag:String = "testTag") {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(40.dp, 32.dp),
+            .padding(40.dp, 32.dp)
+            .testTag(testTag),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
