@@ -14,7 +14,6 @@ import pl.edu.agh.implementation.data.getUsers
 import pl.edu.agh.implementation.model.UserRole
 
 typealias UserListStateSuccess = CommonViewModel.State.Success<List<UserListViewItem>>
-typealias UserListStateError = CommonViewModel.State.Error
 
 class CourierListViewModel : UserListViewModel(UserRole.COURIER)
 

@@ -102,7 +102,6 @@ object ApiClient {
                 "Invalid or expired refresh token or unexpected error"
             )
         }
-
     }
 
     suspend fun ApiClient.logout(refreshToken: String) {
